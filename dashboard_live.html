@@ -1,0 +1,2172 @@
+<title>Pulso Interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
+  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
+  --accent:#00806D; --accent-soft:#E4EFEB; --neg:#BE4526; --neg-soft:#F7E8E2;
+  --r1:#E4EFEB; --r2:#BCDAD3; --r3:#86C2B6; --r4:#46A08F; --r5:#0D7E6B;
+  --sup-a:#EDEFEB; --sup-b:#E0E4DE;
+  --shadow:0 1px 2px rgba(22,32,29,.06), 0 4px 16px -8px rgba(22,32,29,.10);
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --neg:#D5714D; --neg-soft:#2E211C;
+  --r1:#202927; --r2:#254440; --r3:#2E6459; --r4:#368873; --r5:#43AF99;
+  --sup-a:#1C2220; --sup-b:#252D2B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px -10px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --neg:#D5714D; --neg-soft:#2E211C;
+  --r1:#202927; --r2:#254440; --r3:#2E6459; --r4:#368873; --r5:#43AF99;
+  --sup-a:#1C2220; --sup-b:#252D2B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px -10px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5; margin:0;
+}
+.wrap{max-width:1120px; margin:0 auto; padding-inline:20px; padding-block:32px 56px;}
+h1,h2,h3{margin:0; text-wrap:balance; font-weight:600; letter-spacing:-.01em}
+h1{font-size:28px}
+h2{font-size:15px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+
+/* ---------- cabecera ---------- */
+header{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justify-content:space-between; margin-bottom:8px}
+.head-meta{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; color:var(--ink-2)}
+.head-meta b{font-weight:500; color:var(--ink)}
+.synthetic{
+  display:inline-flex; align-items:center; gap:8px; margin:20px 0 28px; padding:8px 12px;
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:0 var(--radius) var(--radius) 0; background:var(--surface-2);
+  color:var(--ink-2); font-size:12.5px;
+}
+
+/* ---------- bloques ---------- */
+section{margin-top:36px}
+.sec-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:14px; flex-wrap:wrap}
+.sec-head p{margin:0; font-size:12.5px; color:var(--ink-3); max-width:60ch}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+
+/* ---------- KPIs ---------- */
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:14px}
+.kpi{padding:16px 18px 14px; display:flex; flex-direction:column; gap:10px}
+.kpi .label{font-size:12px; color:var(--ink-2); font-weight:500}
+.kpi .figure{display:flex; align-items:baseline; gap:10px}
+.kpi .value{font-family:"IBM Plex Mono",monospace; font-size:34px; font-weight:500; letter-spacing:-.02em; line-height:1}
+.kpi .sub{font-size:12px; color:var(--ink-3)}
+.delta{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500; padding:2px 7px;
+  border-radius:999px; white-space:nowrap;
+}
+.delta.up{background:var(--accent-soft); color:var(--accent)}
+.delta.down{background:var(--neg-soft); color:var(--neg)}
+.delta.flat{background:var(--line-2); color:var(--ink-2)}
+
+/* ---------- gráficos ---------- */
+.charts{display:grid; grid-template-columns:1.45fr 1fr; gap:14px}
+@media (max-width:760px){ .charts{grid-template-columns:1fr} }
+.chart-card{padding:16px 18px 10px}
+.chart-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:12px}
+.chart-wrap{position:relative}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.tip{
+  position:absolute; pointer-events:none; opacity:0; transform:translate(-50%,-100%);
+  background:var(--ink); color:var(--ground); padding:6px 9px; border-radius:6px;
+  font-size:11.5px; white-space:nowrap; z-index:5; transition:opacity .12s;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.tip b{font-family:"IBM Plex Mono",monospace; font-weight:500}
+.btn-table{
+  background:none; border:1px solid var(--line); color:var(--ink-2); font:inherit; font-size:11.5px;
+  padding:3px 9px; border-radius:999px; cursor:pointer;
+}
+.btn-table:hover{border-color:var(--accent); color:var(--accent)}
+table.data{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px}
+table.data th,table.data td{text-align:right; padding:5px 8px; border-bottom:1px solid var(--line-2)}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data th{color:var(--ink-3); font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:.06em}
+
+/* ---------- dimensiones ---------- */
+.dims{padding:6px 18px 14px}
+.dim-row{
+  display:grid; grid-template-columns:150px 46px 1fr 66px 54px; align-items:center; gap:12px;
+  padding:9px 0; border-bottom:1px solid var(--line-2);
+}
+.dim-row:last-child{border-bottom:none}
+.dim-row .name{font-size:13px}
+.dim-row .idx{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:500; text-align:right}
+.bar{height:8px; border-radius:4px; background:var(--line-2); overflow:hidden}
+.bar span{display:block; height:100%; border-radius:4px; background:var(--r4)}
+.dim-row .n{font-size:11.5px; color:var(--ink-3); text-align:right; font-family:"IBM Plex Mono",monospace}
+@media (max-width:620px){
+  .dim-row{grid-template-columns:1fr 46px 60px; grid-template-areas:"name idx delta" "bar bar n"; gap:6px 10px}
+  .dim-row .name{grid-area:name} .dim-row .idx{grid-area:idx} .dim-row .d{grid-area:delta}
+  .dim-row .bar{grid-area:bar} .dim-row .n{grid-area:n}
+}
+
+/* ---------- matriz ---------- */
+.matrix-scroll{overflow-x:auto; padding:16px 18px 18px}
+.matrix{border-collapse:separate; border-spacing:2px; min-width:760px; width:100%}
+.matrix th{
+  font-size:10.5px; font-weight:500; color:var(--ink-2); text-align:center; padding-bottom:6px;
+  letter-spacing:.02em;
+}
+.matrix th.row-head{text-align:left; font-size:12.5px; color:var(--ink); padding-right:12px; white-space:nowrap}
+.matrix td{
+  height:34px; min-width:52px; border-radius:5px; text-align:center; cursor:default;
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink);
+}
+.matrix td.sup{
+  background:repeating-linear-gradient(135deg,var(--sup-a) 0 5px,var(--sup-b) 5px 10px);
+  color:var(--ink-3); font-size:10.5px;
+}
+.matrix td:hover{outline:2px solid var(--accent); outline-offset:-2px}
+.legend{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:14px; font-size:11.5px; color:var(--ink-2)}
+.legend .ramp{display:flex; gap:2px}
+.legend .ramp i{width:26px; height:10px; border-radius:2px; display:block}
+.legend .sup-key{
+  width:26px; height:10px; border-radius:2px; display:inline-block; vertical-align:-1px;
+  background:repeating-linear-gradient(135deg,var(--sup-a) 0 4px,var(--sup-b) 4px 8px);
+  border:1px solid var(--line);
+}
+
+/* ---------- equipos ---------- */
+.teams{padding:6px 18px 14px}
+.team-row{
+  display:grid; grid-template-columns:1fr 64px 120px 74px; align-items:center; gap:14px;
+  padding:10px 0; border-bottom:1px solid var(--line-2);
+}
+.team-row:last-child{border-bottom:none}
+.team-row .hc{font-size:11.5px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace; text-align:right}
+.pill{
+  font-size:11px; padding:2px 8px; border-radius:999px; background:var(--line-2); color:var(--ink-2);
+  white-space:nowrap; display:inline-block;
+}
+@media (max-width:620px){ .team-row{grid-template-columns:1fr 60px 70px} .team-row .bar{display:none} }
+
+/* ---------- comentarios ---------- */
+.filters{display:flex; gap:6px; flex-wrap:wrap}
+.chip{
+  font:inherit; font-size:11.5px; padding:4px 11px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+}
+.chip[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:var(--ground)}
+.comments{display:grid; gap:10px; margin-top:14px}
+.comment{padding:13px 16px; display:grid; gap:7px}
+.comment p{margin:0; font-size:13.5px; line-height:1.55}
+.comment .meta{display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:11.5px; color:var(--ink-3)}
+.comment .meta .grow{margin-left:auto}
+.reply-btn{
+  font:inherit; font-size:11.5px; padding:3px 10px; border-radius:999px; cursor:pointer;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink-2);
+}
+.reply-btn:hover{border-color:var(--accent); color:var(--accent)}
+.reply-box{display:grid; gap:8px; margin-top:4px}
+.reply-box textarea{
+  width:100%; min-height:74px; resize:vertical; padding:10px 12px; font:inherit; font-size:13px;
+  color:var(--ink); background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+}
+.reply-box textarea:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:var(--accent)}
+.reply-box .row{display:flex; gap:8px; align-items:center; justify-content:flex-end; flex-wrap:wrap}
+.reply-box .msg{margin-right:auto; font-size:11.5px; color:var(--ink-3)}
+.reply-box .msg.err{color:var(--neg)}
+.btn-send{
+  font:inherit; font-size:12.5px; padding:6px 14px; border-radius:8px; cursor:pointer;
+  background:var(--accent); border:1px solid var(--accent); color:var(--surface); font-weight:500;
+}
+.replies-tag{font-size:11.5px; color:var(--accent)}
+.status{font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; padding:2px 7px; border-radius:4px; font-weight:500}
+.status.new{background:var(--accent-soft); color:var(--accent)}
+.status.in_review{background:var(--line-2); color:var(--ink-2)}
+.status.answered{background:transparent; color:var(--ink-3); border:1px solid var(--line)}
+
+footer{margin-top:44px; padding-top:20px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3)}
+footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Clon Nailted · Fase 1</div>
+      <h1>Pulso interno</h1>
+    </div>
+    <div class="head-meta">
+      <span>Empresa: <b id="m-company"></b></span>
+      <span>Último ciclo: <b id="m-cycle" class="mono"></b></span>
+      <span>Umbral: <b id="m-min" class="mono"></b></span>
+    </div>
+  </header>
+
+  <div class="synthetic" id="m-note"></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Evolución</h2>
+      <p>El índice de clima se mide cada semana; el eNPS, una vez al mes.
+         Escalas distintas, gráficos distintos.</p>
+    </div>
+    <div class="charts">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div>
+            <div class="eyebrow">Índice de clima</div>
+            <div class="sub mono" id="clima-range" style="font-size:11.5px;color:var(--ink-3)"></div>
+          </div>
+          <button class="btn-table" id="toggle-table" aria-expanded="false">Ver tabla</button>
+        </div>
+        <div class="chart-wrap">
+          <svg id="clima-chart" viewBox="0 0 580 210" role="img"
+               aria-label="Evolución semanal del índice de clima"></svg>
+          <div class="tip" id="clima-tip"></div>
+        </div>
+        <div id="clima-table" hidden></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div>
+            <div class="eyebrow">eNPS</div>
+            <div class="sub" style="font-size:11.5px;color:var(--ink-3)">Promotores − detractores</div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg id="enps-chart" viewBox="0 0 340 210" role="img"
+               aria-label="eNPS por ciclo mensual"></svg>
+          <div class="tip" id="enps-tip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Dimensiones</h2>
+      <p>Último dato disponible de cada dimensión, de peor a mejor. La variación compara
+         con la vez anterior que se preguntó.</p>
+    </div>
+    <div class="card dims" id="dims"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Equipos × dimensiones</h2>
+      <p id="matrix-sub"></p>
+    </div>
+    <div class="card">
+      <div class="matrix-scroll">
+        <table class="matrix" id="matrix"></table>
+        <div class="legend">
+          <span>Índice</span>
+          <span class="ramp" aria-hidden="true">
+            <i style="background:var(--r1)"></i><i style="background:var(--r2)"></i>
+            <i style="background:var(--r3)"></i><i style="background:var(--r4)"></i>
+            <i style="background:var(--r5)"></i>
+          </span>
+          <span class="mono">0 → 100</span>
+          <span style="margin-left:6px"><span class="sup-key"></span>
+            Sin datos suficientes (menos de <span id="leg-min" class="mono"></span>
+            respuestas o menos de <span class="mono" id="leg-min2"></span> personas)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Equipos</h2>
+      <p>Media de todas las dimensiones en la ventana móvil.</p>
+    </div>
+    <div class="card teams" id="teams"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Comentarios</h2>
+      <div class="filters" id="c-filters">
+        <button class="chip" data-status="all" aria-pressed="true">Todos</button>
+        <button class="chip" data-status="new" aria-pressed="false">Sin revisar</button>
+        <button class="chip" data-status="in_review" aria-pressed="false">En revisión</button>
+        <button class="chip" data-status="answered" aria-pressed="false">Respondidos</button>
+      </div>
+    </div>
+    <div class="comments" id="comments"></div>
+  </section>
+
+  <footer>
+    Los datos llegan de las funciones <code>api_overview</code>, <code>api_trend</code>,
+    <code>api_dimension_scores</code>, <code>api_team_comparison</code> y
+    <code>api_comment_inbox</code>. Aquí van embebidos con la misma forma que devuelve
+    Supabase: cambiar <code>loadData()</code> por las llamadas RPC no toca el resto del código.
+  </footer>
+</div>
+
+<script type="application/json" id="payload">{
+ "company": "Empresa Demo S.L.",
+ "min_segment_responses": 5,
+ "window_cycles": 4,
+ "generated_from": "datos sintéticos — generate_seed.py",
+ "overview": {
+  "cycle_date": "2026-09-10",
+  "climate_index": 64.3,
+  "climate_delta": -1.8,
+  "enps": 16.0,
+  "enps_delta": -22.0,
+  "participation_pct": 75.2,
+  "n_responses": 88,
+  "invited": 117,
+  "open_comments": 82
+ },
+ "trend": [
+  {
+   "cycle_date": "2026-06-25",
+   "climate_index": 69.1,
+   "n_responses": 107.0,
+   "enps": 36.0,
+   "participation_pct": 92.2,
+   "invited": 116.0
+  },
+  {
+   "cycle_date": "2026-07-02",
+   "climate_index": 70.3,
+   "n_responses": 89.0,
+   "enps": null,
+   "participation_pct": 76.7,
+   "invited": 116.0
+  },
+  {
+   "cycle_date": "2026-07-09",
+   "climate_index": 64.7,
+   "n_responses": 86.0,
+   "enps": null,
+   "participation_pct": 74.1,
+   "invited": 116.0
+  },
+  {
+   "cycle_date": "2026-07-16",
+   "climate_index": 72.4,
+   "n_responses": 105.0,
+   "enps": null,
+   "participation_pct": 90.5,
+   "invited": 116.0
+  },
+  {
+   "cycle_date": "2026-07-23",
+   "climate_index": 66.4,
+   "n_responses": 99.0,
+   "enps": 38.0,
+   "participation_pct": 84.6,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-07-30",
+   "climate_index": 71.4,
+   "n_responses": 102.0,
+   "enps": null,
+   "participation_pct": 87.2,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-08-06",
+   "climate_index": 67.7,
+   "n_responses": 95.0,
+   "enps": null,
+   "participation_pct": 81.2,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-08-13",
+   "climate_index": 68.1,
+   "n_responses": 87.0,
+   "enps": null,
+   "participation_pct": 74.4,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-08-20",
+   "climate_index": 66.0,
+   "n_responses": 87.0,
+   "enps": 16.0,
+   "participation_pct": 74.4,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-08-27",
+   "climate_index": 70.5,
+   "n_responses": 97.0,
+   "enps": null,
+   "participation_pct": 82.9,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-09-03",
+   "climate_index": 66.1,
+   "n_responses": 82.0,
+   "enps": null,
+   "participation_pct": 70.1,
+   "invited": 117.0
+  },
+  {
+   "cycle_date": "2026-09-10",
+   "climate_index": 64.3,
+   "n_responses": 88.0,
+   "enps": null,
+   "participation_pct": 75.2,
+   "invited": 117.0
+  }
+ ],
+ "dimensions": [
+  {
+   "dimension_code": "compensacion",
+   "dimension_name": "Compensación",
+   "cycle_date": "2026-09-03",
+   "score_index": 53.0,
+   "n_responses": 82.0,
+   "delta": -5.0
+  },
+  {
+   "dimension_code": "desarrollo",
+   "dimension_name": "Desarrollo profesional",
+   "cycle_date": "2026-09-10",
+   "score_index": 56.3,
+   "n_responses": 88.0,
+   "delta": -0.9
+  },
+  {
+   "dimension_code": "seguridad_psicologica",
+   "dimension_name": "Seguridad psicológica",
+   "cycle_date": "2026-09-10",
+   "score_index": 63.4,
+   "n_responses": 88.0,
+   "delta": -3.4
+  },
+  {
+   "dimension_code": "conciliacion",
+   "dimension_name": "Conciliación",
+   "cycle_date": "2026-08-27",
+   "score_index": 64.7,
+   "n_responses": 97.0,
+   "delta": -2.8
+  },
+  {
+   "dimension_code": "relacion_manager",
+   "dimension_name": "Relación con el manager",
+   "cycle_date": "2026-09-10",
+   "score_index": 65.6,
+   "n_responses": 88.0,
+   "delta": 1.5
+  },
+  {
+   "dimension_code": "carga_y_estres",
+   "dimension_name": "Carga de trabajo y estrés",
+   "cycle_date": "2026-09-03",
+   "score_index": 66.2,
+   "n_responses": 82.0,
+   "delta": -1.9
+  },
+  {
+   "dimension_code": "reconocimiento",
+   "dimension_name": "Reconocimiento",
+   "cycle_date": "2026-09-10",
+   "score_index": 66.8,
+   "n_responses": 88.0,
+   "delta": -3.0
+  },
+  {
+   "dimension_code": "motivacion",
+   "dimension_name": "Motivación",
+   "cycle_date": "2026-09-03",
+   "score_index": 68.3,
+   "n_responses": 82.0,
+   "delta": -5.8
+  },
+  {
+   "dimension_code": "proposito_valores",
+   "dimension_name": "Propósito y valores",
+   "cycle_date": "2026-09-03",
+   "score_index": 68.9,
+   "n_responses": 82.0,
+   "delta": -5.0
+  },
+  {
+   "dimension_code": "colaboracion",
+   "dimension_name": "Colaboración",
+   "cycle_date": "2026-09-10",
+   "score_index": 69.6,
+   "n_responses": 88.0,
+   "delta": -6.2
+  },
+  {
+   "dimension_code": "autonomia",
+   "dimension_name": "Autonomía",
+   "cycle_date": "2026-09-03",
+   "score_index": 74.1,
+   "n_responses": 82.0,
+   "delta": 7.4
+  },
+  {
+   "dimension_code": "comunicacion",
+   "dimension_name": "Comunicación",
+   "cycle_date": "2026-08-27",
+   "score_index": 75.3,
+   "n_responses": 97.0,
+   "delta": 2.4
+  }
+ ],
+ "dimension_series": {
+  "autonomia": [
+   {
+    "cycle_date": "2026-07-02",
+    "value": 74.7
+   },
+   {
+    "cycle_date": "2026-07-16",
+    "value": 71.7
+   },
+   {
+    "cycle_date": "2026-08-06",
+    "value": 71.6
+   },
+   {
+    "cycle_date": "2026-08-20",
+    "value": 66.7
+   },
+   {
+    "cycle_date": "2026-09-03",
+    "value": 74.1
+   }
+  ],
+  "carga_y_estres": [
+   {
+    "cycle_date": "2026-07-09",
+    "value": 71.8
+   },
+   {
+    "cycle_date": "2026-07-30",
+    "value": 72.3
+   },
+   {
+    "cycle_date": "2026-08-20",
+    "value": 68.1
+   },
+   {
+    "cycle_date": "2026-09-03",
+    "value": 66.2
+   }
+  ],
+  "colaboracion": [
+   {
+    "cycle_date": "2026-06-25",
+    "value": 77.8
+   },
+   {
+    "cycle_date": "2026-07-16",
+    "value": 76.0
+   },
+   {
+    "cycle_date": "2026-07-30",
+    "value": 75.2
+   },
+   {
+    "cycle_date": "2026-08-13",
+    "value": 71.3
+   },
+   {
+    "cycle_date": "2026-08-27",
+    "value": 75.8
+   },
+   {
+    "cycle_date": "2026-09-10",
+    "value": 69.6
+   }
+  ],
+  "compensacion": [
+   {
+    "cycle_date": "2026-06-25",
+    "value": 60.3
+   },
+   {
+    "cycle_date": "2026-07-09",
+    "value": 57.3
+   },
+   {
+    "cycle_date": "2026-07-23",
+    "value": 62.1
+   },
+   {
+    "cycle_date": "2026-08-13",
+    "value": 58.0
+   },
+   {
+    "cycle_date": "2026-09-03",
+    "value": 53.0
+   }
+  ],
+  "comunicacion": [
+   {
+    "cycle_date": "2026-07-02",
+    "value": 75.0
+   },
+   {
+    "cycle_date": "2026-07-23",
+    "value": 75.5
+   },
+   {
+    "cycle_date": "2026-08-06",
+    "value": 72.9
+   },
+   {
+    "cycle_date": "2026-08-27",
+    "value": 75.3
+   }
+  ],
+  "conciliacion": [
+   {
+    "cycle_date": "2026-07-02",
+    "value": 66.9
+   },
+   {
+    "cycle_date": "2026-07-23",
+    "value": 62.6
+   },
+   {
+    "cycle_date": "2026-08-13",
+    "value": 67.5
+   },
+   {
+    "cycle_date": "2026-08-27",
+    "value": 64.7
+   }
+  ],
+  "desarrollo": [
+   {
+    "cycle_date": "2026-06-25",
+    "value": 58.6
+   },
+   {
+    "cycle_date": "2026-07-09",
+    "value": 54.4
+   },
+   {
+    "cycle_date": "2026-07-23",
+    "value": 58.8
+   },
+   {
+    "cycle_date": "2026-08-06",
+    "value": 53.2
+   },
+   {
+    "cycle_date": "2026-08-20",
+    "value": 57.2
+   },
+   {
+    "cycle_date": "2026-09-10",
+    "value": 56.3
+   }
+  ],
+  "motivacion": [
+   {
+    "cycle_date": "2026-07-02",
+    "value": 67.1
+   },
+   {
+    "cycle_date": "2026-07-16",
+    "value": 70.0
+   },
+   {
+    "cycle_date": "2026-07-30",
+    "value": 70.1
+   },
+   {
+    "cycle_date": "2026-08-13",
+    "value": 74.1
+   },
+   {
+    "cycle_date": "2026-09-03",
+    "value": 68.3
+   }
+  ],
+  "proposito_valores": [
+   {
+    "cycle_date": "2026-06-25",
+    "value": 76.4
+   },
+   {
+    "cycle_date": "2026-07-09",
+    "value": 72.7
+   },
+   {
+    "cycle_date": "2026-07-23",
+    "value": 72.7
+   },
+   {
+    "cycle_date": "2026-08-06",
+    "value": 72.6
+   },
+   {
+    "cycle_date": "2026-08-20",
+    "value": 73.9
+   },
+   {
+    "cycle_date": "2026-09-03",
+    "value": 68.9
+   }
+  ],
+  "reconocimiento": [
+   {
+    "cycle_date": "2026-07-02",
+    "value": 68.0
+   },
+   {
+    "cycle_date": "2026-07-16",
+    "value": 75.0
+   },
+   {
+    "cycle_date": "2026-08-06",
+    "value": 68.4
+   },
+   {
+    "cycle_date": "2026-08-27",
+    "value": 69.8
+   },
+   {
+    "cycle_date": "2026-09-10",
+    "value": 66.8
+   }
+  ],
+  "relacion_manager": [
+   {
+    "cycle_date": "2026-07-09",
+    "value": 67.4
+   },
+   {
+    "cycle_date": "2026-07-30",
+    "value": 67.6
+   },
+   {
+    "cycle_date": "2026-08-20",
+    "value": 64.1
+   },
+   {
+    "cycle_date": "2026-09-10",
+    "value": 65.6
+   }
+  ],
+  "seguridad_psicologica": [
+   {
+    "cycle_date": "2026-06-25",
+    "value": 72.4
+   },
+   {
+    "cycle_date": "2026-07-16",
+    "value": 69.3
+   },
+   {
+    "cycle_date": "2026-07-30",
+    "value": 71.8
+   },
+   {
+    "cycle_date": "2026-08-13",
+    "value": 69.5
+   },
+   {
+    "cycle_date": "2026-08-27",
+    "value": 66.8
+   },
+   {
+    "cycle_date": "2026-09-10",
+    "value": 63.4
+   }
+  ]
+ },
+ "teams": [
+  {
+   "team_name": "Producto",
+   "headcount": 22.0,
+   "n_responses": 72.0,
+   "score_index": 75.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "headcount": 31.0,
+   "n_responses": 87.0,
+   "score_index": 74.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "headcount": 12.0,
+   "n_responses": 32.0,
+   "score_index": 71.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "headcount": 19.0,
+   "n_responses": 60.0,
+   "score_index": 63.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "headcount": 26.0,
+   "n_responses": 81.0,
+   "score_index": 49.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "headcount": 3.0,
+   "n_responses": 12.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "headcount": 4.0,
+   "n_responses": 10.0,
+   "score_index": null,
+   "suppressed": true
+  }
+ ],
+ "matrix": [
+  {
+   "team_name": "Producto",
+   "dimension_code": "carga_y_estres",
+   "n": 36.0,
+   "score_index": 70.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "proposito_valores",
+   "n": 36.0,
+   "score_index": 75.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "proposito_valores",
+   "n": 42.0,
+   "score_index": 83.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "desarrollo",
+   "n": 44.0,
+   "score_index": 62.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "carga_y_estres",
+   "n": 41.0,
+   "score_index": 40.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "autonomia",
+   "n": 41.0,
+   "score_index": 54.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "relacion_manager",
+   "n": 44.0,
+   "score_index": 54.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "proposito_valores",
+   "n": 26.0,
+   "score_index": 64.4,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "carga_y_estres",
+   "n": 13.0,
+   "score_index": 69.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "proposito_valores",
+   "n": 13.0,
+   "score_index": 76.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "autonomia",
+   "n": 13.0,
+   "score_index": 75.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "carga_y_estres",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "conciliacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "reconocimiento",
+   "n": 36.0,
+   "score_index": 68.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "seguridad_psicologica",
+   "n": 36.0,
+   "score_index": 73.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "comunicacion",
+   "n": 19.0,
+   "score_index": 89.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "colaboracion",
+   "n": 45.0,
+   "score_index": 80.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "seguridad_psicologica",
+   "n": 45.0,
+   "score_index": 76.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "conciliacion",
+   "n": 26.0,
+   "score_index": 70.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "comunicacion",
+   "n": 26.0,
+   "score_index": 78.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "reconocimiento",
+   "n": 40.0,
+   "score_index": 55.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "seguridad_psicologica",
+   "n": 40.0,
+   "score_index": 45.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "reconocimiento",
+   "n": 19.0,
+   "score_index": 80.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "seguridad_psicologica",
+   "n": 19.0,
+   "score_index": 73.7,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "conciliacion",
+   "n": 10.0,
+   "score_index": 60.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "comunicacion",
+   "n": 10.0,
+   "score_index": 82.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "reconocimiento",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "conciliacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "comunicacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "carga_y_estres",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "compensacion",
+   "n": 4.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "proposito_valores",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "motivacion",
+   "n": 19.0,
+   "score_index": 84.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "compensacion",
+   "n": 18.0,
+   "score_index": 47.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "motivacion",
+   "n": 15.0,
+   "score_index": 65.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "motivacion",
+   "n": 6.0,
+   "score_index": 87.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "compensacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "motivacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "relacion_manager",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "desarrollo",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "relacion_manager",
+   "n": 34.0,
+   "score_index": 77.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "autonomia",
+   "n": 36.0,
+   "score_index": 84.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "desarrollo",
+   "n": 34.0,
+   "score_index": 74.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "carga_y_estres",
+   "n": 42.0,
+   "score_index": 81.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "autonomia",
+   "n": 42.0,
+   "score_index": 72.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "relacion_manager",
+   "n": 44.0,
+   "score_index": 68.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "proposito_valores",
+   "n": 41.0,
+   "score_index": 59.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "desarrollo",
+   "n": 44.0,
+   "score_index": 44.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "carga_y_estres",
+   "n": 26.0,
+   "score_index": 76.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "autonomia",
+   "n": 26.0,
+   "score_index": 71.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "desarrollo",
+   "n": 28.0,
+   "score_index": 49.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "relacion_manager",
+   "n": 28.0,
+   "score_index": 59.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "desarrollo",
+   "n": 16.0,
+   "score_index": 51.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "relacion_manager",
+   "n": 16.0,
+   "score_index": 62.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "proposito_valores",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "autonomia",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "desarrollo",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "relacion_manager",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "colaboracion",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "reconocimiento",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "seguridad_psicologica",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "comunicacion",
+   "n": 3.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "colaboracion",
+   "n": 36.0,
+   "score_index": 81.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "conciliacion",
+   "n": 19.0,
+   "score_index": 85.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "reconocimiento",
+   "n": 45.0,
+   "score_index": 73.9,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "colaboracion",
+   "n": 40.0,
+   "score_index": 50.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "conciliacion",
+   "n": 19.0,
+   "score_index": 39.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "comunicacion",
+   "n": 19.0,
+   "score_index": 56.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "colaboracion",
+   "n": 34.0,
+   "score_index": 71.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "reconocimiento",
+   "n": 34.0,
+   "score_index": 67.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "seguridad_psicologica",
+   "n": 34.0,
+   "score_index": 55.1,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "conciliacion",
+   "n": 17.0,
+   "score_index": 58.8,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "comunicacion",
+   "n": 17.0,
+   "score_index": 73.5,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "colaboracion",
+   "n": 19.0,
+   "score_index": 80.3,
+   "suppressed": false
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "colaboracion",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "People",
+   "dimension_code": "seguridad_psicologica",
+   "n": 6.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "autonomia",
+   "n": 5.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Dirección",
+   "dimension_code": "motivacion",
+   "n": 4.0,
+   "score_index": null,
+   "suppressed": true
+  },
+  {
+   "team_name": "Producto",
+   "dimension_code": "compensacion",
+   "n": 19.0,
+   "score_index": 48.7,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "compensacion",
+   "n": 17.0,
+   "score_index": 63.2,
+   "suppressed": false
+  },
+  {
+   "team_name": "Tecnología",
+   "dimension_code": "motivacion",
+   "n": 17.0,
+   "score_index": 70.6,
+   "suppressed": false
+  },
+  {
+   "team_name": "Operaciones",
+   "dimension_code": "motivacion",
+   "n": 18.0,
+   "score_index": 41.7,
+   "suppressed": false
+  },
+  {
+   "team_name": "Comercial",
+   "dimension_code": "compensacion",
+   "n": 15.0,
+   "score_index": 45.0,
+   "suppressed": false
+  },
+  {
+   "team_name": "Marketing",
+   "dimension_code": "compensacion",
+   "n": 6.0,
+   "score_index": 66.7,
+   "suppressed": false
+  }
+ ],
+ "comments": [
+  {
+   "id": "f1966b21-2838-4714-9121-1aedeb81e224",
+   "body": "No tengo claro qué tengo que hacer para promocionar.",
+   "status": "new",
+   "created_on": "2026-09-14",
+   "team_name": null
+  },
+  {
+   "id": "3f3753af-f65a-4aa3-a314-0fccc8b6b9a2",
+   "body": "Cuesta desconectar, hay mensajes a cualquier hora.",
+   "status": "new",
+   "created_on": "2026-09-14",
+   "team_name": null
+  },
+  {
+   "id": "ea882491-649a-4218-a5b5-c511e7ad3be2",
+   "body": "Las reuniones podrían ser más cortas y con agenda.",
+   "status": "new",
+   "created_on": "2026-09-13",
+   "team_name": null
+  },
+  {
+   "id": "3f8cc66b-4423-4cd5-922e-3abc7ada31a6",
+   "body": "Buen ambiente y mucha ayuda entre compañeros.",
+   "status": "answered",
+   "created_on": "2026-09-13",
+   "team_name": null
+  },
+  {
+   "id": "31d46873-c29d-4b1c-8fcb-6df2c5e3b186",
+   "body": "Falta gente en el equipo desde hace meses y se nota en la carga.",
+   "status": "new",
+   "created_on": "2026-09-13",
+   "team_name": null
+  },
+  {
+   "id": "205cffb1-817b-43ce-878d-76426f63def8",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "answered",
+   "created_on": "2026-09-12",
+   "team_name": null
+  },
+  {
+   "id": "36eff201-5656-45f9-9c6a-16e051cb3f06",
+   "body": "Me gustaría tener más feedback continuo, no sólo en la evaluación.",
+   "status": "answered",
+   "created_on": "2026-09-12",
+   "team_name": null
+  },
+  {
+   "id": "83a17fac-c89a-4cbd-8c19-2b501e56a4fb",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "new",
+   "created_on": "2026-09-11",
+   "team_name": null
+  },
+  {
+   "id": "bc443508-3a93-41f7-8050-8324875cf067",
+   "body": "Cuesta desconectar, hay mensajes a cualquier hora.",
+   "status": "answered",
+   "created_on": "2026-09-11",
+   "team_name": null
+  },
+  {
+   "id": "4bfaf1db-7cff-454b-a351-fc3abf79dcb6",
+   "body": "Falta gente en el equipo desde hace meses y se nota en la carga.",
+   "status": "in_review",
+   "created_on": "2026-09-11",
+   "team_name": null
+  },
+  {
+   "id": "f84fe7ef-5c72-4f34-89a8-5d9edec756ca",
+   "body": "Se agradece la transparencia de la última all-hands.",
+   "status": "new",
+   "created_on": "2026-09-10",
+   "team_name": null
+  },
+  {
+   "id": "915fbbf9-53cf-4f73-a384-bb95921409e1",
+   "body": "Falta gente en el equipo desde hace meses y se nota en la carga.",
+   "status": "answered",
+   "created_on": "2026-09-07",
+   "team_name": null
+  },
+  {
+   "id": "fe3d81d8-0eb9-4aed-a39a-d4dfafd3ec8b",
+   "body": "Cuesta desconectar, hay mensajes a cualquier hora.",
+   "status": "new",
+   "created_on": "2026-09-07",
+   "team_name": null
+  },
+  {
+   "id": "994d4c03-7154-44b9-b0ce-68ab7ec9ef95",
+   "body": "Las reuniones podrían ser más cortas y con agenda.",
+   "status": "new",
+   "created_on": "2026-09-07",
+   "team_name": null
+  },
+  {
+   "id": "b92e2cab-08e5-4d93-9ad5-0f42681a035f",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "answered",
+   "created_on": "2026-09-07",
+   "team_name": null
+  },
+  {
+   "id": "ae78dd3f-8b23-4607-ad5e-114d83eab8b5",
+   "body": "Se toman decisiones que nos afectan y nos enteramos cuando ya están tomadas.",
+   "status": "new",
+   "created_on": "2026-09-06",
+   "team_name": null
+  },
+  {
+   "id": "e4406398-f8eb-4113-aaee-a07ac387d8eb",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "in_review",
+   "created_on": "2026-09-06",
+   "team_name": null
+  },
+  {
+   "id": "8125aedb-f088-4735-bdce-4f12dc4676c7",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "in_review",
+   "created_on": "2026-09-04",
+   "team_name": null
+  },
+  {
+   "id": "3c6736b0-7f18-4a88-b02d-81dddc6434ef",
+   "body": "Falta gente en el equipo desde hace meses y se nota en la carga.",
+   "status": "in_review",
+   "created_on": "2026-09-03",
+   "team_name": null
+  },
+  {
+   "id": "d8b6a5b0-c7c2-4f1b-ad30-26db20f8260c",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "answered",
+   "created_on": "2026-09-03",
+   "team_name": null
+  },
+  {
+   "id": "d32063af-eed5-471b-a740-a29df7d75510",
+   "body": "He podido formarme en lo que pedí y se nota.",
+   "status": "new",
+   "created_on": "2026-08-31",
+   "team_name": null
+  },
+  {
+   "id": "8971b1bb-992b-4a0e-8a85-7fe44014c0f8",
+   "body": "Me gustaría tener más feedback continuo, no sólo en la evaluación.",
+   "status": "new",
+   "created_on": "2026-08-31",
+   "team_name": null
+  },
+  {
+   "id": "dce61522-0632-418e-b0dd-be62aa35b738",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "new",
+   "created_on": "2026-08-31",
+   "team_name": null
+  },
+  {
+   "id": "9ce8b890-cc6b-4a6e-9583-b4db67460338",
+   "body": "He podido formarme en lo que pedí y se nota.",
+   "status": "new",
+   "created_on": "2026-08-31",
+   "team_name": null
+  },
+  {
+   "id": "603de161-61f0-41d0-a993-e611e7775ef5",
+   "body": "Las reuniones podrían ser más cortas y con agenda.",
+   "status": "new",
+   "created_on": "2026-08-31",
+   "team_name": null
+  },
+  {
+   "id": "c6ec9e60-e443-4474-b458-6ea415b83fa6",
+   "body": "Me gustaría tener más feedback continuo, no sólo en la evaluación.",
+   "status": "answered",
+   "created_on": "2026-08-30",
+   "team_name": "Producto"
+  },
+  {
+   "id": "58578862-3105-45b6-a40b-1814281269bc",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "new",
+   "created_on": "2026-08-30",
+   "team_name": null
+  },
+  {
+   "id": "fbdebeb5-8cf9-46a3-9028-460260665e51",
+   "body": "Falta gente en el equipo desde hace meses y se nota en la carga.",
+   "status": "new",
+   "created_on": "2026-08-30",
+   "team_name": "Producto"
+  },
+  {
+   "id": "5fa9a39e-ee47-48d4-b9fb-97b9abf1a574",
+   "body": "He podido formarme en lo que pedí y se nota.",
+   "status": "new",
+   "created_on": "2026-08-30",
+   "team_name": "Producto"
+  },
+  {
+   "id": "0285ede1-0f54-49d1-910a-8ebfa9093889",
+   "body": "El cambio de proceso en el equipo ha funcionado muy bien.",
+   "status": "new",
+   "created_on": "2026-08-27",
+   "team_name": "Producto"
+  },
+  {
+   "id": "2fd1843d-9207-4602-961c-d6742978868d",
+   "body": "Me gustaría tener más feedback continuo, no sólo en la evaluación.",
+   "status": "new",
+   "created_on": "2026-08-27",
+   "team_name": "Producto"
+  },
+  {
+   "id": "3dcafd82-565e-4679-bfc1-e2f1613dec3a",
+   "body": "He podido formarme en lo que pedí y se nota.",
+   "status": "new",
+   "created_on": "2026-08-27",
+   "team_name": null
+  },
+  {
+   "id": "5e48245a-b19d-4b55-a5ce-fa0f8671e213",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "new",
+   "created_on": "2026-08-27",
+   "team_name": "Producto"
+  },
+  {
+   "id": "17722cf0-f38e-4bc3-b7df-852c1779e7d0",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "new",
+   "created_on": "2026-08-24",
+   "team_name": null
+  },
+  {
+   "id": "57628c84-2718-4985-b2d6-c18c03a3574a",
+   "body": "Cuesta desconectar, hay mensajes a cualquier hora.",
+   "status": "answered",
+   "created_on": "2026-08-23",
+   "team_name": null
+  },
+  {
+   "id": "a169d799-062e-4424-ae44-d34991225311",
+   "body": "Se toman decisiones que nos afectan y nos enteramos cuando ya están tomadas.",
+   "status": "new",
+   "created_on": "2026-08-23",
+   "team_name": null
+  },
+  {
+   "id": "71e538a4-e8c0-463d-a58a-9c6bf205da82",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "answered",
+   "created_on": "2026-08-21",
+   "team_name": null
+  },
+  {
+   "id": "e716eb38-581f-43df-be71-bda810128b96",
+   "body": "Los salarios se han quedado por detrás del mercado.",
+   "status": "new",
+   "created_on": "2026-08-21",
+   "team_name": null
+  },
+  {
+   "id": "de952d1d-dcbc-4e3f-ab90-60cb02381c49",
+   "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+   "status": "new",
+   "created_on": "2026-08-21",
+   "team_name": null
+  },
+  {
+   "id": "e36345fc-899f-4cfb-af6f-5d6a09ed1c7c",
+   "body": "En general bien, pero la coordinación con otros equipos se puede mejorar.",
+   "status": "answered",
+   "created_on": "2026-08-21",
+   "team_name": null
+  }
+ ]
+}</script>
+<script>
+"use strict";
+
+/* ==================================================================== *
+ *  CAPA DE DATOS
+ *
+ *  Con CONFIG.url relleno, la página pide los datos a Supabase llamando a
+ *  las funciones api_* (que son las que aplican el umbral). Si la petición
+ *  falla — sin sesión, sin red, o servida desde un sitio que bloquea la
+ *  llamada — cae a los datos de demostración embebidos y lo dice arriba.
+ * ==================================================================== */
+const CONFIG = {
+  url: "https://tlljvyxcqtrmiutqnjir.supabase.co",
+  key: "sb_publishable_91UlPuAQdhvg9ylW1bME4g_CDhirXlA"
+};
+
+const DEMO_DATA = JSON.parse(document.getElementById("payload").textContent);
+let D = DEMO_DATA;
+let LIVE = false;
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} }
+};
+
+async function rpc(fn, args = {}){
+  const token = store.get("pulso_token") || CONFIG.key;
+  const r = await fetch(`${CONFIG.url}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+               apikey: CONFIG.key, Authorization: `Bearer ${token}` },
+    body: JSON.stringify(args)
+  });
+  if (!r.ok) throw new Error(`${fn}: ${r.status} ${(await r.text()).slice(0,120)}`);
+  return r.json();
+}
+
+async function signIn(email, password){
+  const r = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: CONFIG.key },
+    body: JSON.stringify({ email, password })
+  });
+  if (!r.ok) throw new Error("No se ha podido entrar: revisa el email y la contraseña.");
+  const j = await r.json();
+  store.set("pulso_token", j.access_token);
+  return j.access_token;
+}
+
+/* Une las cinco llamadas en la misma forma que tienen los datos embebidos,
+   para que el resto de la página no sepa de dónde vienen. */
+async function loadLive(){
+  const [settings, overview, trend, dims, matrix, comments] = await Promise.all([
+    rpc("api_settings"), rpc("api_overview"), rpc("api_climate_trend"),
+    rpc("api_dimension_latest"), rpc("api_team_matrix", { p_window: 4 }),
+    rpc("api_comments")
+  ]);
+  const ov = overview[0] || {};
+  const prev = trend.length > 1 ? trend[trend.length-2].climate_index : null;
+
+  const byTeam = {};
+  matrix.forEach(m => {
+    const t = byTeam[m.team_name] ||= { team_name:m.team_name, headcount:m.headcount,
+                                        vals:[], n:0, suppressed:true };
+    t.n = Math.max(t.n, m.n_responses);
+    if (!m.suppressed) { t.vals.push(m.score_index); t.suppressed = false; }
+  });
+
+  return {
+    company: settings[0]?.company_name ?? "",
+    min_segment_responses: settings[0]?.min_segment_responses ?? 5,
+    window_cycles: 4,
+    overview: {
+      cycle_date: ov.cycle_date, climate_index: ov.climate_index,
+      climate_delta: prev == null ? null : Math.round((ov.climate_index - prev) * 10) / 10,
+      enps: ov.enps, enps_delta: ov.enps_delta,
+      participation_pct: ov.participation_pct, n_responses: ov.n_responses,
+      invited: ov.participation_pct ? Math.round(ov.n_responses / ov.participation_pct * 100) : 0,
+      open_comments: comments.filter(c => c.status === "new").length
+    },
+    trend, dimensions: dims, matrix,
+    teams: Object.values(byTeam).map(t => ({
+      team_name: t.team_name, headcount: t.headcount, n_responses: t.n,
+      score_index: t.vals.length ? Math.round(t.vals.reduce((a,b)=>a+b,0)/t.vals.length*10)/10 : null,
+      suppressed: t.suppressed
+    })).sort((a,b) => (b.score_index ?? -1) - (a.score_index ?? -1)),
+    comments
+  };
+}
+
+const SHORT = {
+  seguridad_psicologica:"Seguridad", motivacion:"Motivación", autonomia:"Autonomía",
+  relacion_manager:"Manager", reconocimiento:"Reconoc.", carga_y_estres:"Carga",
+  conciliacion:"Concil.", comunicacion:"Comunic.", desarrollo:"Desarrollo",
+  compensacion:"Compens.", proposito_valores:"Propósito", colaboracion:"Colabor."
+};
+const RAMP = ["--r1","--r2","--r3","--r4","--r5"];
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (v,d=1) => v==null ? "—" : v.toLocaleString("es-ES",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtDate = s => new Date(s+"T00:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short"});
+const rampStep = v => RAMP[Math.min(4, Math.max(0, Math.floor((v-40)/10)))];  // 40→<50 … 80+
+const deltaChip = (v, unit="") => {
+  if (v == null) return '<span class="delta flat">—</span>';
+  const cls = v > 0.05 ? "up" : v < -0.05 ? "down" : "flat";
+  const sign = v > 0 ? "+" : v < 0 ? "−" : "±";
+  return `<span class="delta ${cls}">${sign}${fmt(Math.abs(v), unit==="pts"?0:1)}${unit?" "+unit:""}</span>`;
+};
+
+function renderAll(){
+/* al repintar (demo -> vivo) se sustituyen los elementos estáticos por copias
+   limpias, para no acumular listeners duplicados */
+["toggle-table","c-filters","comments"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.replaceWith(el.cloneNode(true));
+});
+/* ---------------- cabecera y KPIs ---------------- */
+document.getElementById("m-company").textContent = D.company;
+document.getElementById("m-cycle").textContent = fmtDate(D.overview.cycle_date);
+document.getElementById("m-min").textContent =
+  `${D.min_segment_responses} respuestas y ${D.min_segment_responses} personas`;
+document.getElementById("leg-min").textContent = D.min_segment_responses;
+document.getElementById("leg-min2").textContent = D.min_segment_responses;
+document.getElementById("m-note").textContent = LIVE
+  ? "Conectado a Supabase. Los datos son los del proyecto; las cifras sólo salen de las funciones api_*, que aplican el umbral en la base."
+  : "Datos de demostración embebidos — 117 personas, 7 equipos, 12 ciclos semanales. Ninguna cifra es real.";
+document.getElementById("matrix-sub").textContent =
+  `Ventana móvil de ${D.window_cycles} ciclos. Agrupar semanas permite bajar a nivel de equipo, pero por eso el umbral exige además ${D.min_segment_responses} personas en el segmento: si no, un equipo de 3 acumularía respuestas suficientes siendo siempre las mismas 3 personas.`;
+
+const ov = D.overview;
+const sparkClima = D.trend.map(t => t.climate_index);
+const sparkPart  = D.trend.map(t => t.participation_pct);
+
+function sparkline(values, id){
+  const w = 132, h = 30, p = 3;
+  const min = Math.min(...values), max = Math.max(...values), span = (max-min)||1;
+  const pts = values.map((v,i) => [p + i*(w-2*p)/(values.length-1), h-p - (v-min)/span*(h-2*p)]);
+  const d = pts.map((pt,i) => (i?"L":"M") + pt[0].toFixed(1) + " " + pt[1].toFixed(1)).join(" ");
+  const last = pts[pts.length-1];
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:${w}px" aria-hidden="true">
+    <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+    <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3.2"
+            fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/></svg>`;
+}
+
+document.getElementById("kpis").innerHTML = [
+  { label:"Índice de clima", value:fmt(ov.climate_index), delta:deltaChip(ov.climate_delta),
+    sub:"sobre 100", spark:sparkline(sparkClima) },
+  { label:"eNPS", value:(ov.enps>0?"+":"")+fmt(ov.enps,0), delta:deltaChip(ov.enps_delta,"pts"),
+    sub:"último ciclo mensual", spark:"" },
+  { label:"Participación", value:fmt(ov.participation_pct)+"%", delta:"",
+    sub:`${ov.n_responses} de ${ov.invited} personas`, spark:sparkline(sparkPart) },
+  { label:"Comentarios sin revisar", value:String(ov.open_comments), delta:"",
+    sub:"en la bandeja", spark:"" }
+].map(k => `<div class="card kpi">
+    <div class="label">${k.label}</div>
+    <div class="figure"><span class="value">${k.value}</span>${k.delta}</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+      <span class="sub">${k.sub}</span>${k.spark}
+    </div>
+  </div>`).join("");
+
+/* ---------------- gráfico de líneas: índice de clima ---------------- */
+const tip = (el, html, x, y) => {
+  el.innerHTML = html; el.style.opacity = "1";
+  el.style.left = x + "px"; el.style.top = (y - 10) + "px";
+};
+
+(function climaChart(){
+  const svg = document.getElementById("clima-chart"), tipEl = document.getElementById("clima-tip");
+  const data = D.trend.map(t => ({x:t.cycle_date, y:t.climate_index, n:t.n_responses, p:t.participation_pct}));
+  const W=580, H=210, L=38, R=14, T=16, B=30;
+  const yMin=Math.floor((Math.min(...data.map(d=>d.y))-4)/5)*5;
+  const yMax=Math.ceil((Math.max(...data.map(d=>d.y))+4)/5)*5;
+  const px = i => L + i*(W-L-R)/(data.length-1);
+  const py = v => T + (yMax-v)/(yMax-yMin)*(H-T-B);
+  document.getElementById("clima-range").textContent =
+    `${fmtDate(data[0].x)} → ${fmtDate(data.at(-1).x)}`;
+
+  let g = "";
+  for(let v=yMin; v<=yMax; v+=5){
+    g += `<line x1="${L}" y1="${py(v)}" x2="${W-R}" y2="${py(v)}" stroke="var(--line-2)" stroke-width="1"/>
+          <text x="${L-8}" y="${py(v)+4}" text-anchor="end" font-size="10.5"
+                fill="var(--ink-3)" font-family="IBM Plex Mono,monospace">${v}</text>`;
+  }
+  const line = data.map((d,i)=>(i?"L":"M")+px(i).toFixed(1)+" "+py(d.y).toFixed(1)).join(" ");
+  const area = `M${px(0)} ${py(yMin)} ` + data.map((d,i)=>"L"+px(i).toFixed(1)+" "+py(d.y).toFixed(1)).join(" ") +
+               ` L${px(data.length-1)} ${py(yMin)} Z`;
+  let ticks = "";
+  data.forEach((d,i)=>{ if(i%3===0 || i===data.length-1)
+    ticks += `<text x="${px(i)}" y="${H-10}" text-anchor="middle" font-size="10.5"
+              fill="var(--ink-3)" font-family="IBM Plex Mono,monospace">${fmtDate(d.x)}</text>`; });
+  const last = data.length-1;
+  svg.innerHTML = `${g}${ticks}
+    <path d="${area}" fill="var(--accent)" opacity=".08"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2"
+          stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${px(last)}" cy="${py(data[last].y)}" r="4.5" fill="var(--accent)"
+            stroke="var(--surface)" stroke-width="2"/>
+    <text x="${px(last)}" y="${py(data[last].y)-12}" text-anchor="end" font-size="12" font-weight="500"
+          fill="var(--ink)" font-family="IBM Plex Mono,monospace">${fmt(data[last].y)}</text>
+    <line id="cross" x1="0" y1="${T}" x2="0" y2="${H-B}" stroke="var(--ink-3)"
+          stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+    <circle id="cdot" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" opacity="0"/>
+    <rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" id="hit"/>`;
+
+  const cross=svg.querySelector("#cross"), dot=svg.querySelector("#cdot");
+  svg.querySelector("#hit").addEventListener("pointermove", ev => {
+    const r = svg.getBoundingClientRect(), sx = (ev.clientX-r.left)/r.width*W;
+    const i = Math.max(0, Math.min(data.length-1, Math.round((sx-L)/((W-L-R)/(data.length-1)))));
+    const d = data[i];
+    cross.setAttribute("x1",px(i)); cross.setAttribute("x2",px(i)); cross.setAttribute("opacity",".5");
+    dot.setAttribute("cx",px(i)); dot.setAttribute("cy",py(d.y)); dot.setAttribute("opacity","1");
+    tip(tipEl, `${fmtDate(d.x)} · <b>${fmt(d.y)}</b> · ${d.n} respuestas (${fmt(d.p)}%)`,
+        px(i)/W*r.width, py(d.y)/H*r.height);
+  });
+  svg.querySelector("#hit").addEventListener("pointerleave", () => {
+    cross.setAttribute("opacity","0"); dot.setAttribute("opacity","0"); tipEl.style.opacity="0";
+  });
+
+  document.getElementById("clima-table").innerHTML =
+    `<table class="data"><thead><tr><th>Ciclo</th><th>Índice</th><th>Respuestas</th><th>Participación</th></tr></thead>
+     <tbody>${data.map(d=>`<tr><td>${fmtDate(d.x)}</td><td class="mono">${fmt(d.y)}</td>
+       <td class="mono">${d.n}</td><td class="mono">${fmt(d.p)}%</td></tr>`).join("")}</tbody></table>`;
+  const btn = document.getElementById("toggle-table"), tbl = document.getElementById("clima-table");
+  btn.addEventListener("click", () => {
+    tbl.hidden = !tbl.hidden;
+    btn.setAttribute("aria-expanded", String(!tbl.hidden));
+    btn.textContent = tbl.hidden ? "Ver tabla" : "Ocultar tabla";
+  });
+})();
+
+/* ---------------- eNPS ---------------- */
+(function enpsChart(){
+  const svg = document.getElementById("enps-chart"), tipEl = document.getElementById("enps-tip");
+  const data = D.trend.filter(t => t.enps != null);
+  const W=340, H=210, L=34, R=14, T=22, B=30;
+  const max = Math.max(50, ...data.map(d=>Math.abs(d.enps)));
+  const py = v => T + (max-v)/(2*max)*(H-T-B);
+  const bw = 46, step = (W-L-R)/data.length;
+  let g = "";
+  [max, max/2, 0, -max/2, -max].forEach(v => {
+    g += `<line x1="${L}" y1="${py(v)}" x2="${W-R}" y2="${py(v)}"
+            stroke="${v===0?"var(--line)":"var(--line-2)"}" stroke-width="1"/>
+          <text x="${L-8}" y="${py(v)+4}" text-anchor="end" font-size="10.5" fill="var(--ink-3)"
+                font-family="IBM Plex Mono,monospace">${v>0?"+":""}${v}</text>`;
+  });
+  let bars = "";
+  data.forEach((d,i) => {
+    const cx = L + step*i + step/2, top = Math.min(py(d.enps), py(0)), hgt = Math.abs(py(d.enps)-py(0));
+    bars += `<rect x="${cx-bw/2}" y="${top}" width="${bw}" height="${Math.max(hgt,2)}" rx="4"
+               fill="var(--accent)" opacity=".9" data-i="${i}"/>
+             <text x="${cx}" y="${py(d.enps)-9}" text-anchor="middle" font-size="12.5" font-weight="500"
+               fill="var(--ink)" font-family="IBM Plex Mono,monospace">+${d.enps}</text>
+             <text x="${cx}" y="${H-10}" text-anchor="middle" font-size="10.5" fill="var(--ink-3)"
+               font-family="IBM Plex Mono,monospace">${fmtDate(d.cycle_date)}</text>`;
+  });
+  svg.innerHTML = g + bars;
+  svg.querySelectorAll("rect").forEach(r => {
+    r.addEventListener("pointerenter", ev => {
+      const d = data[+r.dataset.i], b = svg.getBoundingClientRect();
+      r.setAttribute("opacity","1");
+      tip(tipEl, `${fmtDate(d.cycle_date)} · eNPS <b>+${d.enps}</b> · ${d.n_responses} respuestas`,
+          (+r.getAttribute("x") + bw/2)/W*b.width, py(d.enps)/H*b.height);
+    });
+    r.addEventListener("pointerleave", () => { r.setAttribute("opacity",".9"); tipEl.style.opacity="0"; });
+  });
+})();
+
+/* ---------------- dimensiones ---------------- */
+document.getElementById("dims").innerHTML = D.dimensions.map(d => `
+  <div class="dim-row">
+    <span class="name">${d.dimension_name}</span>
+    <span class="idx">${fmt(d.score_index)}</span>
+    <span class="bar"><span style="width:${d.score_index}%;background:var(${rampStep(d.score_index)})"></span></span>
+    <span class="d">${deltaChip(d.delta)}</span>
+    <span class="n">n=${d.n_responses}</span>
+  </div>`).join("");
+
+/* ---------------- matriz equipo × dimensión ---------------- */
+(function matrix(){
+  const dims = D.dimensions.map(d => d.dimension_code);
+  const teams = D.teams.map(t => t.team_name);
+  const byKey = {};
+  D.matrix.forEach(m => { byKey[m.team_name+"|"+m.dimension_code] = m; });
+  const head = `<thead><tr><th class="row-head">Equipo</th>${
+    dims.map(c => `<th>${SHORT[c]||c}</th>`).join("")}</tr></thead>`;
+  const body = teams.map(t => `<tr><th class="row-head">${t}</th>${
+    dims.map(c => {
+      const cell = byKey[t+"|"+c];
+      if(!cell || cell.suppressed)
+        return `<td class="sup" title="${t} · ${SHORT[c]||c} — n=${cell?cell.n:0}, por debajo del umbral de ${D.min_segment_responses}">n&lt;${D.min_segment_responses}</td>`;
+      return `<td style="background:var(${rampStep(cell.score_index)})"
+                title="${t} · ${SHORT[c]||c} — índice ${fmt(cell.score_index)} sobre ${cell.n} respuestas">${fmt(cell.score_index,0)}</td>`;
+    }).join("")}</tr>`).join("");
+  document.getElementById("matrix").innerHTML = head + "<tbody>" + body + "</tbody>";
+})();
+
+/* ---------------- equipos ---------------- */
+document.getElementById("teams").innerHTML = D.teams.map(t => `
+  <div class="team-row">
+    <span>${t.team_name} <span class="hc" style="margin-left:6px">${t.headcount} pers.</span></span>
+    <span class="idx mono" style="text-align:right;font-weight:500">${t.suppressed?"—":fmt(t.score_index)}</span>
+    <span class="bar">${t.suppressed?"":`<span style="width:${t.score_index}%;background:var(${rampStep(t.score_index)})"></span>`}</span>
+    <span style="text-align:right">${t.suppressed
+      ? `<span class="pill">n&lt;${D.min_segment_responses}</span>`
+      : `<span class="hc">n=${t.n_responses}</span>`}</span>
+  </div>`).join("");
+
+/* ---------------- comentarios ---------------- */
+const LABEL = {new:"Sin revisar", in_review:"En revisión", answered:"Respondido"};
+const PAGE = 8;
+let cStatus = "all", cShown = PAGE;
+function renderComments(status){
+  const all = D.comments.filter(c => status === "all" || c.status === status);
+  const list = all.slice(0, cShown);
+  document.getElementById("comments").innerHTML = (list.length ? list.map(c => `
+    <div class="card comment" data-id="${c.id}">
+      <p>${c.body}</p>
+      <div class="meta">
+        <span class="status ${c.status}">${LABEL[c.status]}</span>
+        <span class="mono">${fmtDate(c.created_on)}</span>
+        <span>${c.team_name ? c.team_name : "equipo oculto por el umbral"}</span>
+        ${Number(c.replies) > 0 ? `<span class="replies-tag">${c.replies} respuesta${Number(c.replies) > 1 ? "s" : ""}</span>` : ""}
+        <span class="grow"></span>
+        <button class="reply-btn" data-reply="${c.id}">Responder</button>
+      </div>
+      <div class="reply-box" id="rb-${c.id}" hidden></div>
+    </div>`).join("") : `<div class="card comment"><p>No hay comentarios en este estado.</p></div>`)
+    + (all.length > cShown
+        ? `<button class="chip" id="more" style="justify-self:start">Mostrar ${Math.min(PAGE, all.length-cShown)} más · quedan ${all.length-cShown}</button>`
+        : "");
+  const more = document.getElementById("more");
+  if (more) more.addEventListener("click", () => { cShown += PAGE; renderComments(cStatus); });
+}
+renderComments(cStatus);
+/* Responder a un comentario desde la bandeja.
+   Va por app.api_reply_comment, que comprueba que quien responde es RRHH y,
+   si esa persona se identificó al responder la encuesta, le encola un aviso.
+   Nunca se sabe quién escribió el comentario. */
+document.getElementById("comments").addEventListener("click", ev => {
+  const abrir = ev.target.closest("[data-reply]");
+  if (abrir) return openReply(abrir.dataset.reply);
+  const enviar = ev.target.closest("[data-send]");
+  if (enviar) return sendReply(enviar.dataset.send);
+  const cerrar = ev.target.closest("[data-cancel]");
+  if (cerrar) {
+    const box = document.getElementById("rb-" + cerrar.dataset.cancel);
+    box.hidden = true; box.innerHTML = "";
+  }
+});
+
+function openReply(id){
+  const box = document.getElementById("rb-" + id);
+  if (!box || !box.hidden) return;
+  box.hidden = false;
+  box.innerHTML = `
+    <textarea id="rt-${id}" maxlength="1200"
+      placeholder="Lo que respondas lo verá quien escribió, a través de su enlace del hilo."></textarea>
+    <div class="row">
+      <span class="msg" id="rm-${id}">${LIVE ? "" : "Modo demostración: no se guarda."}</span>
+      <button class="reply-btn" data-cancel="${id}">Cancelar</button>
+      <button class="btn-send" data-send="${id}">Enviar respuesta</button>
+    </div>`;
+  box.querySelector("textarea").focus();
+}
+
+async function sendReply(id){
+  const ta  = document.getElementById("rt-" + id);
+  const msg = document.getElementById("rm-" + id);
+  const cuerpo = (ta.value || "").trim();
+  if (!cuerpo) { msg.className = "msg err"; msg.textContent = "Escribe algo antes de enviar."; return; }
+
+  msg.className = "msg"; msg.textContent = "Enviando…";
+  try {
+    if (LIVE) {
+      const r = await rpc("api_reply_comment", { p_comment: id, p_body: cuerpo });
+      if (r && r.avisado) msg.textContent = "Enviado. Se le ha avisado porque se identificó.";
+    }
+    const c = D.comments.find(x => String(x.id) === String(id));
+    const eraNuevo = c && c.status === "new";
+    if (c) { c.status = "answered"; c.replies = Number(c.replies || 0) + 1; }
+    // se descuenta uno en vez de recontar: la lista embebida está recortada
+    if (eraNuevo) D.overview.open_comments = Math.max(0, Number(D.overview.open_comments) - 1);
+    const kpi = document.querySelectorAll(".kpi .value")[3];   // «comentarios sin revisar»
+    if (kpi) kpi.textContent = String(D.overview.open_comments);
+    renderComments(cStatus);
+  } catch (err) {
+    msg.className = "msg err";
+    msg.textContent = err.message.slice(0, 120);
+  }
+}
+
+document.getElementById("c-filters").addEventListener("click", ev => {
+  const btn = ev.target.closest(".chip"); if(!btn || btn.id === "more") return;
+  document.querySelectorAll("#c-filters .chip").forEach(b => b.setAttribute("aria-pressed", String(b===btn)));
+  cStatus = btn.dataset.status; cShown = PAGE;
+  renderComments(cStatus);
+});
+}  /* ---- fin de renderAll ---- */
+
+/* ---------------- arranque ---------------- */
+(async function start(){
+  const configured = CONFIG.url && !CONFIG.url.startsWith("__");
+  if (configured) {
+    try { D = await loadLive(); LIVE = true; }
+    catch (err) {
+      store.del("pulso_token");
+      console.warn("Sin datos en vivo, se usan los de demostración:", err.message);
+      D = DEMO_DATA; LIVE = false;
+    }
+  }
+  renderAll();
+  if (configured && !LIVE) mountSignIn();
+})();
+
+/* Acceso de RRHH: sólo aparece si hay proyecto configurado y aún no hay sesión */
+function mountSignIn(){
+  const box = document.createElement("div");
+  box.className = "card";
+  box.style.cssText = "padding:16px 18px;margin-top:26px;display:grid;gap:10px;max-width:420px";
+  box.innerHTML = `
+    <div class="eyebrow">Acceso de RRHH</div>
+    <div style="font-size:12.5px;color:var(--ink-2)">
+      Entra con el usuario de Supabase que enlazaste con
+      <code style="font-family:'IBM Plex Mono',monospace">app.link_hr_user()</code>
+      para ver los datos del proyecto en vez de los de demostración.</div>
+    <input id="si-email" type="email" placeholder="email" autocomplete="username"
+      style="font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink)">
+    <input id="si-pass" type="password" placeholder="contraseña" autocomplete="current-password"
+      style="font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink)">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="chip" id="si-go"
+        style="background:var(--ink);color:var(--ground);border-color:var(--ink)">Entrar</button>
+      <span id="si-msg" style="font-size:12px;color:var(--neg)"></span>
+    </div>`;
+  document.querySelector(".wrap").appendChild(box);
+  box.querySelector("#si-go").addEventListener("click", async () => {
+    const msg = box.querySelector("#si-msg");
+    msg.textContent = "Entrando…";
+    try {
+      await signIn(box.querySelector("#si-email").value.trim(),
+                   box.querySelector("#si-pass").value);
+      D = await loadLive(); LIVE = true;
+      box.remove(); renderAll();
+    } catch (err) { msg.textContent = err.message; }
+  });
+}
+</script>

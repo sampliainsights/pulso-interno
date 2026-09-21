@@ -1,0 +1,46 @@
+# Envía lo que la base de datos ha dejado en la cola (app.notification_outbox).
+#
+# Los secretos se configuran en el repositorio:
+#   Settings → Secrets and variables → Actions → New repository secret
+#     SUPABASE_URL           https://tlljvyxcqtrmiutqnjir.supabase.co
+#     SUPABASE_SERVICE_KEY   la clave service_role (Supabase → Settings → API)
+#     GRAPH_TENANT_ID        id de directorio (Entra ID)
+#     GRAPH_CLIENT_ID        id de aplicación
+#     GRAPH_CLIENT_SECRET    valor del secreto de cliente
+#     GRAPH_SENDER           pulso@samplia.com
+#
+# La hora del cron va en UTC. Cada media hora es de sobra: las invitaciones se
+# encolan los lunes por la mañana y los recordatorios los jueves.
+# En un repositorio privado, cada ejecución consume minutos de Actions; si el
+# plan aprieta, baja la frecuencia a '0 * * * *' (una vez por hora).
+
+name: Enviar pulso
+
+on:
+  schedule:
+    - cron: '*/30 6-18 * * 1-5'   # de lunes a viernes, de 8:00 a 20:00 en España
+  workflow_dispatch:               # y a mano desde la pestaña Actions
+
+concurrency:
+  group: enviar-pulso
+  cancel-in-progress: false        # que dos ejecuciones no envíen lo mismo dos veces
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Enviar lo pendiente
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GRAPH_TENANT_ID:      ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID:      ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET:  ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER:         ${{ secrets.GRAPH_SENDER }}
+        run: python worker/send_outbox.py

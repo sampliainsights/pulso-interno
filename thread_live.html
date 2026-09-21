@@ -1,0 +1,204 @@
+<title>Hilo Anónimo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
+  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
+  --accent:#00806D; --accent-soft:#E4EFEB; --accent-ink:#FFFFFF; --neg:#BE4526;
+  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#D5714D;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#D5714D;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{background:var(--ground); color:var(--ink); margin:0; font-size:15px; line-height:1.55;
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:620px; margin:0 auto; padding-inline:20px; padding-block:40px 60px}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+h1{font-size:19px; margin:0 0 4px; font-weight:600; letter-spacing:-.01em}
+.sub{font-size:13px; color:var(--ink-2); margin:0 0 24px; max-width:56ch}
+
+.thread{display:grid; gap:14px; margin-bottom:26px}
+.msg{padding:15px 17px; border-radius:12px; border:1px solid var(--line); background:var(--surface);
+  box-shadow:var(--shadow)}
+.msg .who{display:flex; justify-content:space-between; gap:12px; align-items:baseline;
+  font-size:12px; color:var(--ink-3); margin-bottom:7px}
+.msg .who b{font-weight:500; color:var(--ink-2)}
+.msg p{margin:0; font-size:14.5px}
+.msg.mine{background:var(--accent-soft); border-color:transparent; margin-left:36px}
+.msg.mine .who b{color:var(--accent)}
+.msg.hr{margin-right:36px}
+.msg.first{border-left:3px solid var(--ink-3)}
+.mono{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+
+textarea{width:100%; min-height:110px; resize:vertical; padding:13px 14px; font:inherit; font-size:14.5px;
+  color:var(--ink); background:var(--surface-2); border:1px solid var(--line); border-radius:10px}
+textarea:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:var(--accent)}
+.actions{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; flex-wrap:wrap}
+button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid transparent}
+.btn{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);
+  padding:10px 20px; font-weight:500; font-size:14.5px}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+.privacy{font-size:12.5px; color:var(--ink-3); display:flex; gap:9px; align-items:flex-start; max-width:52ch}
+.privacy svg{flex:none; margin-top:2px}
+.demo{font-size:12px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:8px 12px; margin-bottom:22px}
+.empty{padding:28px 20px; text-align:center; color:var(--ink-2); font-size:14px;
+  border:1px dashed var(--line); border-radius:12px}
+.err{color:var(--neg); font-size:12.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Clon Nailted · comentario anónimo</div>
+  <h1>Tu hilo</h1>
+  <p class="sub" id="sub"></p>
+  <div class="demo" id="demo-note"></div>
+  <div class="thread" id="thread"></div>
+  <div id="composer"></div>
+</div>
+
+<script type="application/json" id="demo">{
+ "status": "ok",
+ "comment": {
+  "body": "Llevamos tres sprints seguidos con horas extra y nadie lo menciona.",
+  "created_on": "2026-09-10",
+  "estado": "answered"
+ },
+ "replies": [
+  {
+   "body": "Gracias por decirlo. Lo hemos llevado al comité de la semana que viene y os contamos qué sale.",
+   "from": "hr",
+   "who": "People",
+   "at": "2026-09-11T10:20:00+02:00"
+  },
+  {
+   "body": "¿Podéis contar también cómo se van a repartir las prioridades? Es lo que más ruido mete.",
+   "from": "author",
+   "who": "Tú",
+   "at": "2026-09-11T13:05:00+02:00"
+  },
+  {
+   "body": "Sí. La idea es cerrar prioridades el lunes y no tocarlas hasta el viernes. Lo probamos dos semanas y lo revisamos en el siguiente pulso.",
+   "from": "hr",
+   "who": "People",
+   "at": "2026-09-12T09:10:00+02:00"
+  }
+ ]
+}</script>
+<script>
+"use strict";
+
+/* ==================================================================== *
+ *  El enlace del hilo es lo único que conecta a la persona con su
+ *  comentario. La base guarda sólo el hash, igual que con los tokens de
+ *  encuesta: ni desde el comentario se llega a la persona ni al revés.
+ * ==================================================================== */
+const CONFIG = { url: "https://tlljvyxcqtrmiutqnjir.supabase.co", key: "sb_publishable_91UlPuAQdhvg9ylW1bME4g_CDhirXlA" };
+const TOKEN = new URLSearchParams(location.search).get("c");
+const CONFIGURED = CONFIG.url && !CONFIG.url.startsWith("__");
+
+let DATA = JSON.parse(document.getElementById("demo").textContent);
+let DEMO = true;
+
+async function rpc(fn, args){
+  const r = await fetch(`${CONFIG.url}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+               apikey: CONFIG.key, Authorization: `Bearer ${CONFIG.key}` },
+    body: JSON.stringify(args)
+  });
+  if (!r.ok) throw new Error((await r.text()).slice(0, 160));
+  return r.json();
+}
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDate = s => new Date(s).toLocaleDateString("es-ES",{day:"numeric",month:"long"});
+const fmtWhen = s => new Date(s).toLocaleString("es-ES",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+
+function lock(){
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/>
+    <path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
+}
+
+function render(){
+  const t = document.getElementById("thread");
+  document.getElementById("demo-note").textContent = DEMO
+    ? "Demo: hilo de ejemplo. Lo que escribas aquí no se guarda."
+    : "Nadie sabe quién eres, tampoco quien te responde.";
+  document.getElementById("sub").textContent =
+    "Aquí ves lo que escribiste en el pulso y lo que te ha contestado People. "
+    + "Puedes seguir la conversación sin decir quién eres.";
+
+  const replies = DATA.replies || [];
+  t.innerHTML = `
+    <div class="msg first">
+      <div class="who"><b>Tu comentario</b><span class="mono">${fmtDate(DATA.comment.created_on)}</span></div>
+      <p>${esc(DATA.comment.body)}</p>
+    </div>` + (replies.length ? replies.map(r => `
+    <div class="msg ${r.from === "author" ? "mine" : "hr"}">
+      <div class="who"><b>${esc(r.who)}</b><span class="mono">${fmtWhen(r.at)}</span></div>
+      <p>${esc(r.body)}</p>
+    </div>`).join("") : `
+    <div class="empty">Todavía no hay respuesta. Cuando People conteste, aparecerá aquí.</div>`);
+
+  document.getElementById("composer").innerHTML = `
+    <textarea id="reply" placeholder="Escribe tu respuesta…" maxlength="1200"></textarea>
+    <div class="actions">
+      <span class="privacy">${lock()} <span>Sigue siendo anónimo: no se guarda quién escribe.</span></span>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="err" id="err"></span>
+        <button class="btn" id="send">Responder</button>
+      </div>
+    </div>`;
+  document.getElementById("send").addEventListener("click", send);
+}
+
+async function send(){
+  const ta = document.getElementById("reply");
+  const body = ta.value.trim();
+  const err = document.getElementById("err");
+  if (!body) { err.textContent = "Escribe algo antes de enviar."; return; }
+  err.textContent = "";
+  if (DEMO) {
+    DATA.replies = [...(DATA.replies || []),
+      { body, from: "author", who: "Tú", at: new Date().toISOString() }];
+    render(); return;
+  }
+  try {
+    DATA = await rpc("reply_thread", { p_token: TOKEN, p_body: body });
+    render();
+  } catch (e) { err.textContent = e.message; }
+}
+
+(async function start(){
+  if (CONFIGURED && TOKEN) {
+    try {
+      const d = await rpc("get_thread", { p_token: TOKEN });
+      if (d.status === "ok") { DATA = d; DEMO = false; }
+      else {
+        document.getElementById("demo-note").hidden = true;
+        document.getElementById("sub").textContent = "";
+        document.getElementById("thread").innerHTML =
+          `<div class="empty">Este enlace no vale. Puede que el comentario se haya
+           borrado por la política de retención, o que el enlace esté incompleto.</div>`;
+        return;
+      }
+    } catch (e) { console.warn("Sin conexión, modo demo:", e.message); }
+  }
+  render();
+})();
+</script>

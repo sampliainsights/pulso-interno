@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulso interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1;
+  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A; --accent:#00806D;
+  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E; --accent:#3FB4A0;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E; --accent:#3FB4A0;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{background:var(--ground); color:var(--ink); margin:0; font-size:15px; line-height:1.55;
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:560px; margin:0 auto; padding-inline:20px; padding-block:64px 60px}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+h1{font-size:26px; margin:2px 0 10px; font-weight:600; letter-spacing:-.015em}
+.lead{margin:0 0 30px; color:var(--ink-2); font-size:14.5px; max-width:52ch}
+.cards{display:grid; gap:12px}
+a.card{
+  display:block; text-decoration:none; color:inherit; background:var(--surface);
+  border:1px solid var(--line); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow);
+  transition:border-color .12s, transform .12s;
+}
+a.card:hover{border-color:var(--accent); transform:translateY(-1px)}
+a.card h2{margin:0 0 4px; font-size:15px; font-weight:600}
+a.card p{margin:0; font-size:13px; color:var(--ink-3)}
+.nota{margin-top:26px; padding:13px 15px; background:var(--surface-2); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:0 8px 8px 0; font-size:12.5px; color:var(--ink-2)}
+footer{margin-top:30px; font-size:12px; color:var(--ink-3)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Samplia · People</div>
+  <h1>Pulso interno</h1>
+  <p class="lead">Encuestas cortas y anónimas sobre cómo va el trabajo. Una vez por
+     semana, menos de un minuto.</p>
+
+  <div class="cards">
+    <a class="card" href="dashboard_live.html">
+      <h2>Panel de People</h2>
+      <p>Índice de clima, eNPS, participación y comentarios. Requiere cuenta.</p>
+    </a>
+    <a class="card" href="survey_live.html">
+      <h2>Responder el pulso</h2>
+      <p>Se abre con el enlace personal que llega por correo.</p>
+    </a>
+    <a class="card" href="thread_live.html">
+      <h2>Ver la respuesta a tu comentario</h2>
+      <p>Con el enlace de hilo que se guarda al enviar un comentario.</p>
+    </a>
+  </div>
+
+  <div class="nota">
+    Las respuestas se guardan sin nombre y sin la hora exacta, y sólo se muestran
+    agrupadas con las de al menos otras cuatro personas.
+  </div>
+
+  <footer>Si te falta el enlace de tu pulso, escribe a People.</footer>
+</div>
+</body>
+</html>

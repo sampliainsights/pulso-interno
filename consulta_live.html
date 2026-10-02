@@ -3,37 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Resultados de la consulta</title>
+<title>Resultados de la consulta · Samplia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
-  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
-  --accent:#00806D; --accent-soft:#E4EFEB; --accent-ink:#FFFFFF; --neg:#B4452F;
-  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
-  --radius:12px;
+  --ground:#F3F5F9; --surface:#FFFFFF; --surface-2:#F8F9FC; --line:#DDE0E4; --line-2:#EDEEF2;
+  --ink:#171C25; --ink-2:#5A5E66; --ink-3:#878B92;
+  --accent:#2C4B8E; --accent-soft:#E6EFFF; --accent-ink:#FFFFFF; --accent-strong:#16316D;
+  --pos:#227A5C; --pos-soft:#DEF5EA; --neg:#A3402F; --neg-soft:#FFE8E2;
+  --r1:#EEF3FB; --r2:#D3E0FA; --r3:#A8C0ED; --r4:#6F8ECD; --r5:#2C4B8E;
+  --sup-a:#EBEDF1; --sup-b:#DDE0E5;
+  --marca:#C73346;
+  --shadow:none;
+  --radius:10px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#E0785E;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }}
 :root[data-theme="dark"]{
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#E0785E;
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }
 *{box-sizing:border-box}
 body{background:var(--ground); color:var(--ink); margin:0;
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Raleway",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.55}
-.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.mono{font-feature-settings:"tnum" 1; font-variant-numeric:tabular-nums}
 .wrap{max-width:760px; margin:0 auto; padding-inline:20px; padding-block:40px 70px}
-.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+.eyebrow{font-weight:600; font-size:10.5px; letter-spacing:.11em;
   text-transform:uppercase; color:var(--ink-3)}
+.eyebrow.marca{color:var(--marca)}
 .topbar{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:8px}
 .topbar h1{font-size:19px; margin:2px 0 0; font-weight:600; letter-spacing:-.01em}
 .sub{font-size:13px; color:var(--ink-2); margin:0 0 26px; max-width:62ch}
@@ -46,7 +62,7 @@ body{background:var(--ground); color:var(--ink); margin:0;
 .row{display:grid; grid-template-columns:1fr; gap:6px; margin-bottom:14px}
 .row .lbl{display:flex; justify-content:space-between; gap:14px; font-size:14px; align-items:baseline}
 .row .lbl b{font-weight:500; color:var(--ink)}
-.row .num{flex:none; font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-2);
+.row .num{flex:none; font-family:inherit; font-size:13px; color:var(--ink-2);
   font-variant-numeric:tabular-nums}
 .track{height:9px; background:var(--line-2); border-radius:5px; overflow:hidden}
 .fill{height:100%; background:var(--accent); border-radius:5px; width:0;
@@ -63,14 +79,14 @@ button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--i
   background:var(--ink); color:var(--ground); padding:9px 16px; font-size:13.5px}
 .nota{font-size:12.5px; color:var(--ink-3); margin-top:26px}
 footer{margin-top:28px; font-size:12px; color:var(--ink-3); text-align:center}
-footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px}
+footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:11.5px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="topbar">
     <div>
-      <div class="eyebrow">Clon Nailted</div>
+      <div class="eyebrow marca">Samplia</div>
       <h1>Resultados de la consulta</h1>
     </div>
     <div class="mono" id="total" style="font-size:12px;color:var(--ink-3)"></div>

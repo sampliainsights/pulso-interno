@@ -3,40 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pulso Semanal</title>
+<title>Pulso semanal · Samplia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
-  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
-  --accent:#00806D; --accent-soft:#E4EFEB; --accent-ink:#FFFFFF;
-  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
-  --radius:12px;
+  --ground:#F3F5F9; --surface:#FFFFFF; --surface-2:#F8F9FC; --line:#DDE0E4; --line-2:#EDEEF2;
+  --ink:#171C25; --ink-2:#5A5E66; --ink-3:#878B92;
+  --accent:#2C4B8E; --accent-soft:#E6EFFF; --accent-ink:#FFFFFF; --accent-strong:#16316D;
+  --pos:#227A5C; --pos-soft:#DEF5EA; --neg:#A3402F; --neg-soft:#FFE8E2;
+  --r1:#EEF3FB; --r2:#D3E0FA; --r3:#A8C0ED; --r4:#6F8ECD; --r5:#2C4B8E;
+  --sup-a:#EBEDF1; --sup-b:#DDE0E5;
+  --marca:#C73346;
+  --shadow:none;
+  --radius:10px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }}
 :root[data-theme="dark"]{
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }
 *{box-sizing:border-box}
 body{
   background:var(--ground); color:var(--ink); margin:0;
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Raleway",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:15px; line-height:1.55;
 }
-.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.mono{font-feature-settings:"tnum" 1; font-variant-numeric:tabular-nums}
 .wrap{max-width:600px; margin:0 auto; padding-inline:20px; padding-block:40px 60px}
-.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+.eyebrow{font-weight:600; font-size:10.5px; letter-spacing:.11em;
   text-transform:uppercase; color:var(--ink-3)}
+.eyebrow.marca{color:var(--marca)}
 
 .topbar{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:10px}
 .topbar h1{font-size:17px; margin:0; font-weight:600; letter-spacing:-.01em}
@@ -65,7 +80,7 @@ legend{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 
 .opt label{
   display:flex; align-items:center; justify-content:center; height:56px; cursor:pointer;
   border:1px solid var(--line); border-radius:9px; background:var(--surface-2);
-  font-family:"IBM Plex Mono",monospace; font-size:17px; color:var(--ink-2);
+  font-family:inherit; font-size:17px; color:var(--ink-2);
   transition:background .12s, border-color .12s, color .12s, transform .12s;
 }
 .scale.wide .opt{flex:0 0 calc(9.09% - 6px); min-width:38px}
@@ -95,7 +110,7 @@ legend{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 
 .choice input:checked + label{border-color:var(--accent); background:var(--accent-soft); color:var(--ink)}
 .choice input:checked + label .mark{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
 .choice input:focus-visible + label{outline:2px solid var(--accent); outline-offset:2px}
-.choice .key{margin-left:auto; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+.choice .key{margin-left:auto; font-family:inherit; font-size:11px; color:var(--ink-3)}
 .hint{margin-top:10px; font-size:12.5px; color:var(--ink-3)}
 
 textarea{
@@ -135,11 +150,11 @@ button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid transpa
 .payload summary:hover{color:var(--accent)}
 .payload pre{
   background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:13px;
-  font-family:"IBM Plex Mono",monospace; font-size:11.5px; line-height:1.6; color:var(--ink-2);
+  font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:11.5px; line-height:1.6; color:var(--ink-2);
   overflow-x:auto; margin:6px 0 0;
 }
 footer{margin-top:26px; font-size:12px; color:var(--ink-3); text-align:center}
-footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px}
+footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:11.5px}
 @media (max-width:460px){
   .scale{gap:6px} .opt label{height:52px; font-size:16px}
   .choice .key{display:none}
@@ -152,7 +167,7 @@ footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px}
 <div class="wrap">
   <div class="topbar">
     <div>
-      <div class="eyebrow">Clon Nailted · Fase 1</div>
+      <div class="eyebrow marca">Samplia</div>
       <h1>Pulso semanal</h1>
     </div>
     <div class="meta mono" id="meta"></div>
@@ -252,8 +267,7 @@ function paintHeader(){
   // una consulta puntual no es el pulso semanal: la cabecera lo dice
   const esConsulta = SURVEY.kind === "consulta";
   document.querySelector(".topbar h1").textContent = esConsulta ? "Una consulta rápida" : "Pulso semanal";
-  document.querySelector(".topbar .eyebrow").textContent = esConsulta ? "Antes de empezar" : "Clon Nailted · Fase 1";
-  document.title = esConsulta ? "Una consulta rápida" : "Pulso Semanal";
+  document.title = esConsulta ? "Una consulta rápida · Samplia" : "Pulso semanal · Samplia";
   document.getElementById("meta").textContent = SURVEY.closes_on
     ? "Cierra el " + fmtDate(SURVEY.closes_on) : "";
   document.getElementById("demo-note").textContent = DEMO
@@ -357,12 +371,12 @@ function commentStep(){
       <span class="eyebrow mono">${i+1} / ${steps.length}</span>
     </div>
     <p class="q">¿Hay algo que quieras contar?</p>
-    <textarea id="comment" placeholder="Opcional. Lo lee el equipo de People, sin saber quién lo escribió."
+    <textarea id="comment" placeholder="Opcional. Lo lee el equipo de RRHH, sin saber quién lo escribió."
       maxlength="1200">${esc(comment)}</textarea>
     <label class="check">
       <input type="checkbox" id="identify" ${identify ? "checked" : ""}>
       <span class="t"><b>Quiero identificarme en esta respuesta</b>
-        <span>Por defecto no se guarda quién eres. Si marcas esto, People podrá
+        <span>Por defecto no se guarda quién eres. Si marcas esto, RRHH podrá
         responderte directamente — sólo en esta respuesta, no en las siguientes.</span></span>
     </label>
     <div class="actions">
@@ -495,7 +509,7 @@ async function send(){
       <h2>Gracias</h2>
       <p>Has contestado ${answered} de ${total} preguntas${comment ? " y dejado un comentario" : ""}.</p>
       <p>${identify
-          ? "Como te has identificado, People puede responderte directamente sobre esta respuesta."
+          ? "Como te has identificado, RRHH puede responderte directamente sobre esta respuesta."
           : "Se ha guardado sin tu nombre, con la fecha pero no la hora, y con tu equipo, localización y tramo de antigüedad para poder agrupar."}</p>
       <p>El enlace ya no vuelve a funcionar. El próximo pulso llega la semana que viene.</p>
       ${threadLink ? `
@@ -503,13 +517,13 @@ async function send(){
                   border:1px solid var(--line);border-radius:10px;background:var(--surface-2)">
         <div style="font-size:13px;font-weight:500;margin-bottom:6px">Guarda este enlace</div>
         <div style="font-size:12.5px;color:var(--ink-3);margin-bottom:10px">
-          Es la única forma de ver si People responde a tu comentario. Como no sabemos
+          Es la única forma de ver si RRHH responde a tu comentario. Como no sabemos
           quién eres, no podemos avisarte de otra manera.</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input id="thread-link" readonly value="${threadLink}"
             style="flex:1;min-width:200px;font:inherit;font-size:12px;padding:8px 10px;
                    border:1px solid var(--line);border-radius:8px;background:var(--surface);
-                   color:var(--ink-2);font-family:'IBM Plex Mono',monospace">
+                   color:var(--ink-2);font-family:inherit">
           <button class="btn-ghost" id="copy-link">Copiar</button>
         </div>
       </div>` : ""}
@@ -548,7 +562,7 @@ async function send(){
       } else {
         paintHeader();
         const textos = {
-          invalid:  ["Este enlace no vale", "Puede que sea de un ciclo anterior o que ya se haya usado. Si crees que es un error, escribe a People."],
+          invalid:  ["Este enlace no vale", "Puede que sea de un ciclo anterior o que ya se haya usado. Si crees que es un error, escribe a RRHH."],
           answered: ["Ya has respondido", "Gracias, no hace falta nada más."],
           closed:   ["Este ciclo ya está cerrado", "Se cerró el " + (data.closes_on ? fmtDate(data.closes_on) : "") + ". El siguiente llega pronto."]
         };

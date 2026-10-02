@@ -3,52 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pulso Interno</title>
+<title>Panel · Samplia Pulso Interno</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
-  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
-  --accent:#00806D; --accent-soft:#E4EFEB; --neg:#BE4526; --neg-soft:#F7E8E2;
-  --r1:#E4EFEB; --r2:#BCDAD3; --r3:#86C2B6; --r4:#46A08F; --r5:#0D7E6B;
-  --sup-a:#EDEFEB; --sup-b:#E0E4DE;
-  --shadow:0 1px 2px rgba(22,32,29,.06), 0 4px 16px -8px rgba(22,32,29,.10);
+  --ground:#F3F5F9; --surface:#FFFFFF; --surface-2:#F8F9FC; --line:#DDE0E4; --line-2:#EDEEF2;
+  --ink:#171C25; --ink-2:#5A5E66; --ink-3:#878B92;
+  --accent:#2C4B8E; --accent-soft:#E6EFFF; --accent-ink:#FFFFFF; --accent-strong:#16316D;
+  --pos:#227A5C; --pos-soft:#DEF5EA; --neg:#A3402F; --neg-soft:#FFE8E2;
+  --r1:#EEF3FB; --r2:#D3E0FA; --r3:#A8C0ED; --r4:#6F8ECD; --r5:#2C4B8E;
+  --sup-a:#EBEDF1; --sup-b:#DDE0E5;
+  --marca:#C73346;
+  --shadow:none;
   --radius:10px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --neg:#D5714D; --neg-soft:#2E211C;
-  --r1:#202927; --r2:#254440; --r3:#2E6459; --r4:#368873; --r5:#43AF99;
-  --sup-a:#1C2220; --sup-b:#252D2B;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px -10px rgba(0,0,0,.6);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }}
 :root[data-theme="dark"]{
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --neg:#D5714D; --neg-soft:#2E211C;
-  --r1:#202927; --r2:#254440; --r3:#2E6459; --r4:#368873; --r5:#43AF99;
-  --sup-a:#1C2220; --sup-b:#252D2B;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px -10px rgba(0,0,0,.6);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }
 
 *{box-sizing:border-box}
 body{
   background:var(--ground); color:var(--ink);
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:"Raleway",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:14px; line-height:1.5; margin:0;
 }
 .wrap{max-width:1120px; margin:0 auto; padding-inline:20px; padding-block:32px 56px;}
 h1,h2,h3{margin:0; text-wrap:balance; font-weight:600; letter-spacing:-.01em}
 h1{font-size:28px}
 h2{font-size:15px}
-.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.mono{font-feature-settings:"tnum" 1; font-variant-numeric:tabular-nums}
 .eyebrow{
-  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.09em;
+  font-weight:600; font-size:10.5px; letter-spacing:.11em;
   text-transform:uppercase; color:var(--ink-3);
 }
+.eyebrow.marca{color:var(--marca)}
 
 /* ---------- cabecera ---------- */
 header{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justify-content:space-between; margin-bottom:8px}
@@ -72,13 +81,13 @@ section{margin-top:36px}
 .kpi{padding:16px 18px 14px; display:flex; flex-direction:column; gap:10px}
 .kpi .label{font-size:12px; color:var(--ink-2); font-weight:500}
 .kpi .figure{display:flex; align-items:baseline; gap:10px}
-.kpi .value{font-family:"IBM Plex Mono",monospace; font-size:34px; font-weight:500; letter-spacing:-.02em; line-height:1}
+.kpi .value{font-family:inherit; font-size:34px; font-weight:500; letter-spacing:-.02em; line-height:1}
 .kpi .sub{font-size:12px; color:var(--ink-3)}
 .delta{
-  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500; padding:2px 7px;
+  font-family:inherit; font-size:12px; font-weight:500; padding:2px 7px;
   border-radius:999px; white-space:nowrap;
 }
-.delta.up{background:var(--accent-soft); color:var(--accent)}
+.delta.up{background:var(--pos-soft); color:var(--pos)}
 .delta.down{background:var(--neg-soft); color:var(--neg)}
 .delta.flat{background:var(--line-2); color:var(--ink-2)}
 
@@ -95,7 +104,7 @@ svg{display:block; width:100%; height:auto; overflow:visible}
   font-size:11.5px; white-space:nowrap; z-index:5; transition:opacity .12s;
   box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
-.tip b{font-family:"IBM Plex Mono",monospace; font-weight:500}
+.tip b{font-family:inherit; font-weight:500}
 .btn-table{
   background:none; border:1px solid var(--line); color:var(--ink-2); font:inherit; font-size:11.5px;
   padding:3px 9px; border-radius:999px; cursor:pointer;
@@ -114,10 +123,10 @@ table.data th{color:var(--ink-3); font-weight:500; font-size:11px; text-transfor
 }
 .dim-row:last-child{border-bottom:none}
 .dim-row .name{font-size:13px}
-.dim-row .idx{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:500; text-align:right}
+.dim-row .idx{font-family:inherit; font-size:14px; font-weight:500; text-align:right}
 .bar{height:8px; border-radius:4px; background:var(--line-2); overflow:hidden}
 .bar span{display:block; height:100%; border-radius:4px; background:var(--r4)}
-.dim-row .n{font-size:11.5px; color:var(--ink-3); text-align:right; font-family:"IBM Plex Mono",monospace}
+.dim-row .n{font-size:11.5px; color:var(--ink-3); text-align:right; font-family:inherit}
 @media (max-width:620px){
   .dim-row{grid-template-columns:1fr 46px 60px; grid-template-areas:"name idx delta" "bar bar n"; gap:6px 10px}
   .dim-row .name{grid-area:name} .dim-row .idx{grid-area:idx} .dim-row .d{grid-area:delta}
@@ -134,7 +143,7 @@ table.data th{color:var(--ink-3); font-weight:500; font-size:11px; text-transfor
 .matrix th.row-head{text-align:left; font-size:12.5px; color:var(--ink); padding-right:12px; white-space:nowrap}
 .matrix td{
   height:34px; min-width:52px; border-radius:5px; text-align:center; cursor:default;
-  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink);
+  font-family:inherit; font-size:12px; color:var(--ink);
 }
 .matrix td.sup{
   background:repeating-linear-gradient(135deg,var(--sup-a) 0 5px,var(--sup-b) 5px 10px);
@@ -157,7 +166,7 @@ table.data th{color:var(--ink-3); font-weight:500; font-size:11px; text-transfor
   padding:10px 0; border-bottom:1px solid var(--line-2);
 }
 .team-row:last-child{border-bottom:none}
-.team-row .hc{font-size:11.5px; color:var(--ink-3); font-family:"IBM Plex Mono",monospace; text-align:right}
+.team-row .hc{font-size:11.5px; color:var(--ink-3); font-family:inherit; text-align:right}
 .pill{
   font-size:11px; padding:2px 8px; border-radius:999px; background:var(--line-2); color:var(--ink-2);
   white-space:nowrap; display:inline-block;
@@ -201,7 +210,7 @@ table.data th{color:var(--ink-3); font-weight:500; font-size:11px; text-transfor
 .status.answered{background:transparent; color:var(--ink-3); border:1px solid var(--line)}
 
 footer{margin-top:44px; padding-top:20px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3)}
-footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-2)}
+footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; font-size:11.5px; color:var(--ink-2)}
 :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -209,7 +218,7 @@ footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(-
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">Clon Nailted · Fase 1</div>
+      <div class="eyebrow marca">Samplia</div>
       <h1>Pulso interno</h1>
     </div>
     <div class="head-meta">
@@ -1909,7 +1918,7 @@ const tip = (el, html, x, y) => {
   for(let v=yMin; v<=yMax; v+=5){
     g += `<line x1="${L}" y1="${py(v)}" x2="${W-R}" y2="${py(v)}" stroke="var(--line-2)" stroke-width="1"/>
           <text x="${L-8}" y="${py(v)+4}" text-anchor="end" font-size="10.5"
-                fill="var(--ink-3)" font-family="IBM Plex Mono,monospace">${v}</text>`;
+                fill="var(--ink-3)" font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">${v}</text>`;
   }
   const line = data.map((d,i)=>(i?"L":"M")+px(i).toFixed(1)+" "+py(d.y).toFixed(1)).join(" ");
   const area = `M${px(0)} ${py(yMin)} ` + data.map((d,i)=>"L"+px(i).toFixed(1)+" "+py(d.y).toFixed(1)).join(" ") +
@@ -1917,7 +1926,7 @@ const tip = (el, html, x, y) => {
   let ticks = "";
   data.forEach((d,i)=>{ if(i%3===0 || i===data.length-1)
     ticks += `<text x="${px(i)}" y="${H-10}" text-anchor="middle" font-size="10.5"
-              fill="var(--ink-3)" font-family="IBM Plex Mono,monospace">${fmtDate(d.x)}</text>`; });
+              fill="var(--ink-3)" font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">${fmtDate(d.x)}</text>`; });
   const last = data.length-1;
   svg.innerHTML = `${g}${ticks}
     <path d="${area}" fill="var(--accent)" opacity=".08"/>
@@ -1926,7 +1935,7 @@ const tip = (el, html, x, y) => {
     <circle cx="${px(last)}" cy="${py(data[last].y)}" r="4.5" fill="var(--accent)"
             stroke="var(--surface)" stroke-width="2"/>
     <text x="${px(last)}" y="${py(data[last].y)-12}" text-anchor="end" font-size="12" font-weight="500"
-          fill="var(--ink)" font-family="IBM Plex Mono,monospace">${fmt(data[last].y)}</text>
+          fill="var(--ink)" font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">${fmt(data[last].y)}</text>
     <line id="cross" x1="0" y1="${T}" x2="0" y2="${H-B}" stroke="var(--ink-3)"
           stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
     <circle id="cdot" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" opacity="0"/>
@@ -1971,7 +1980,7 @@ const tip = (el, html, x, y) => {
     g += `<line x1="${L}" y1="${py(v)}" x2="${W-R}" y2="${py(v)}"
             stroke="${v===0?"var(--line)":"var(--line-2)"}" stroke-width="1"/>
           <text x="${L-8}" y="${py(v)+4}" text-anchor="end" font-size="10.5" fill="var(--ink-3)"
-                font-family="IBM Plex Mono,monospace">${v>0?"+":""}${v}</text>`;
+                font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">${v>0?"+":""}${v}</text>`;
   });
   let bars = "";
   data.forEach((d,i) => {
@@ -1979,9 +1988,9 @@ const tip = (el, html, x, y) => {
     bars += `<rect x="${cx-bw/2}" y="${top}" width="${bw}" height="${Math.max(hgt,2)}" rx="4"
                fill="var(--accent)" opacity=".9" data-i="${i}"/>
              <text x="${cx}" y="${py(d.enps)-9}" text-anchor="middle" font-size="12.5" font-weight="500"
-               fill="var(--ink)" font-family="IBM Plex Mono,monospace">+${d.enps}</text>
+               fill="var(--ink)" font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">+${d.enps}</text>
              <text x="${cx}" y="${H-10}" text-anchor="middle" font-size="10.5" fill="var(--ink-3)"
-               font-family="IBM Plex Mono,monospace">${fmtDate(d.cycle_date)}</text>`;
+               font-family="Raleway,sans-serif" font-weight="500" style="font-variant-numeric:tabular-nums">${fmtDate(d.cycle_date)}</text>`;
   });
   svg.innerHTML = g + bars;
   svg.querySelectorAll("rect").forEach(r => {
@@ -2151,7 +2160,7 @@ function mountSignIn(){
     <div class="eyebrow">Acceso de RRHH</div>
     <div style="font-size:12.5px;color:var(--ink-2)">
       Entra con el usuario de Supabase que enlazaste con
-      <code style="font-family:'IBM Plex Mono',monospace">app.link_hr_user()</code>
+      <code style='font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace'>app.link_hr_user()</code>
       para ver los datos del proyecto en vez de los de demostración.</div>
     <input id="si-email" type="email" placeholder="email" autocomplete="username"
       style="font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink)">

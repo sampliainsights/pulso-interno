@@ -3,35 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hilo Anónimo</title>
+<title>Tu hilo · Samplia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap">
 <style>
 :root{
-  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
-  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
-  --accent:#00806D; --accent-soft:#E4EFEB; --accent-ink:#FFFFFF; --neg:#BE4526;
-  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
+  --ground:#F3F5F9; --surface:#FFFFFF; --surface-2:#F8F9FC; --line:#DDE0E4; --line-2:#EDEEF2;
+  --ink:#171C25; --ink-2:#5A5E66; --ink-3:#878B92;
+  --accent:#2C4B8E; --accent-soft:#E6EFFF; --accent-ink:#FFFFFF; --accent-strong:#16316D;
+  --pos:#227A5C; --pos-soft:#DEF5EA; --neg:#A3402F; --neg-soft:#FFE8E2;
+  --r1:#EEF3FB; --r2:#D3E0FA; --r3:#A8C0ED; --r4:#6F8ECD; --r5:#2C4B8E;
+  --sup-a:#EBEDF1; --sup-b:#DDE0E5;
+  --marca:#C73346;
+  --shadow:none;
+  --radius:10px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#D5714D;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }}
 :root[data-theme="dark"]{
-  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
-  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
-  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#D5714D;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+  --ground:#0E1115; --surface:#17191E; --surface-2:#202328; --line:#32353C; --line-2:#272A30;
+  --ink:#EBEDF1; --ink-2:#AEB1B8; --ink-3:#81858C;
+  --accent:#799DE6; --accent-soft:#1C2945; --accent-ink:#0E1115; --accent-strong:#9EBEFC;
+  --pos:#55B38F; --pos-soft:#103628; --neg:#E27965; --neg-soft:#45231C;
+  --r1:#222A39; --r2:#303F5F; --r3:#445D8E; --r4:#5F7EBC; --r5:#7FA2E9;
+  --sup-a:#1F2227; --sup-b:#2B2E34;
+  --marca:#E97076;
+  --shadow:none;
+  --radius:10px;
 }
 *{box-sizing:border-box}
 body{background:var(--ground); color:var(--ink); margin:0; font-size:15px; line-height:1.55;
-  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  font-family:"Raleway",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .wrap{max-width:620px; margin:0 auto; padding-inline:20px; padding-block:40px 60px}
-.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+.eyebrow{font-weight:600; font-size:10.5px; letter-spacing:.11em;
   text-transform:uppercase; color:var(--ink-3)}
+.eyebrow.marca{color:var(--marca)}
 h1{font-size:19px; margin:0 0 4px; font-weight:600; letter-spacing:-.01em}
 .sub{font-size:13px; color:var(--ink-2); margin:0 0 24px; max-width:56ch}
 
@@ -46,7 +62,7 @@ h1{font-size:19px; margin:0 0 4px; font-weight:600; letter-spacing:-.01em}
 .msg.mine .who b{color:var(--accent)}
 .msg.hr{margin-right:36px}
 .msg.first{border-left:3px solid var(--ink-3)}
-.mono{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+.mono{font-feature-settings:"tnum" 1; font-variant-numeric:tabular-nums; letter-spacing:.01em}
 
 textarea{width:100%; min-height:110px; resize:vertical; padding:13px 14px; font:inherit; font-size:14.5px;
   color:var(--ink); background:var(--surface-2); border:1px solid var(--line); border-radius:10px}
@@ -67,7 +83,8 @@ button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid transpa
 </style>
 
 <div class="wrap">
-  <div class="eyebrow">Clon Nailted · comentario anónimo</div>
+  <div class="eyebrow marca">Samplia</div>
+  <div class="eyebrow">Comentario anónimo</div>
   <h1>Tu hilo</h1>
   <p class="sub" id="sub"></p>
   <div class="demo" id="demo-note"></div>
@@ -86,7 +103,7 @@ button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid transpa
   {
    "body": "Gracias por decirlo. Lo hemos llevado al comité de la semana que viene y os contamos qué sale.",
    "from": "hr",
-   "who": "People",
+   "who": "RRHH",
    "at": "2026-09-11T10:20:00+02:00"
   },
   {
@@ -98,7 +115,7 @@ button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid transpa
   {
    "body": "Sí. La idea es cerrar prioridades el lunes y no tocarlas hasta el viernes. Lo probamos dos semanas y lo revisamos en el siguiente pulso.",
    "from": "hr",
-   "who": "People",
+   "who": "RRHH",
    "at": "2026-09-12T09:10:00+02:00"
   }
  ]
@@ -145,7 +162,7 @@ function render(){
     ? "Demo: hilo de ejemplo. Lo que escribas aquí no se guarda."
     : "Nadie sabe quién eres, tampoco quien te responde.";
   document.getElementById("sub").textContent =
-    "Aquí ves lo que escribiste en el pulso y lo que te ha contestado People. "
+    "Aquí ves lo que escribiste en el pulso y lo que te ha contestado RRHH. "
     + "Puedes seguir la conversación sin decir quién eres.";
 
   const replies = DATA.replies || [];
@@ -158,7 +175,7 @@ function render(){
       <div class="who"><b>${esc(r.who)}</b><span class="mono">${fmtWhen(r.at)}</span></div>
       <p>${esc(r.body)}</p>
     </div>`).join("") : `
-    <div class="empty">Todavía no hay respuesta. Cuando People conteste, aparecerá aquí.</div>`);
+    <div class="empty">Todavía no hay respuesta. Cuando RRHH conteste, aparecerá aquí.</div>`);
 
   document.getElementById("composer").innerHTML = `
     <textarea id="reply" placeholder="Escribe tu respuesta…" maxlength="1200"></textarea>

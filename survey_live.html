@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pulso semanal · Samplia</title>
+<title>Pulso mensual · Samplia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap">
@@ -168,7 +168,7 @@ footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; 
   <div class="topbar">
     <div>
       <div class="eyebrow marca">Samplia</div>
-      <h1>Pulso semanal</h1>
+      <h1>Pulso mensual</h1>
     </div>
     <div class="meta mono" id="meta"></div>
   </div>
@@ -264,10 +264,10 @@ const bar   = document.getElementById("bar");
 const fmtDate = s => new Date(s+"T00:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"long"});
 
 function paintHeader(){
-  // una consulta puntual no es el pulso semanal: la cabecera lo dice
+  // una consulta puntual no es el pulso mensual: la cabecera lo dice
   const esConsulta = SURVEY.kind === "consulta";
-  document.querySelector(".topbar h1").textContent = esConsulta ? "Una consulta rápida" : "Pulso semanal";
-  document.title = esConsulta ? "Una consulta rápida · Samplia" : "Pulso semanal · Samplia";
+  document.querySelector(".topbar h1").textContent = esConsulta ? "Una consulta rápida" : "Pulso mensual";
+  document.title = esConsulta ? "Una consulta rápida · Samplia" : "Pulso mensual · Samplia";
   document.getElementById("meta").textContent = SURVEY.closes_on
     ? "Cierra el " + fmtDate(SURVEY.closes_on) : "";
   document.getElementById("demo-note").textContent = DEMO
@@ -511,7 +511,7 @@ async function send(){
       <p>${identify
           ? "Como te has identificado, RRHH puede responderte directamente sobre esta respuesta."
           : "Se ha guardado sin tu nombre, con la fecha pero no la hora, y con tu equipo, localización y tramo de antigüedad para poder agrupar."}</p>
-      <p>El enlace ya no vuelve a funcionar. El próximo pulso llega la semana que viene.</p>
+      <p>El enlace ya no vuelve a funcionar. El próximo pulso llega el mes que viene.</p>
       ${threadLink ? `
       <div style="margin:20px auto 4px;max-width:460px;text-align:left;padding:14px 16px;
                   border:1px solid var(--line);border-radius:10px;background:var(--surface-2)">

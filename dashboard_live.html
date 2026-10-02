@@ -235,7 +235,7 @@ footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; 
   <section>
     <div class="sec-head">
       <h2>Evolución</h2>
-      <p>El índice de clima se mide cada semana; el eNPS, una vez al mes.
+      <p>El índice de clima se mide cada mes; el eNPS, una vez por trimestre.
          Escalas distintas, gráficos distintos.</p>
     </div>
     <div class="charts">
@@ -249,7 +249,7 @@ footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; 
         </div>
         <div class="chart-wrap">
           <svg id="clima-chart" viewBox="0 0 580 210" role="img"
-               aria-label="Evolución semanal del índice de clima"></svg>
+               aria-label="Evolución mensual del índice de clima"></svg>
           <div class="tip" id="clima-tip"></div>
         </div>
         <div id="clima-table" hidden></div>
@@ -1859,9 +1859,9 @@ document.getElementById("leg-min").textContent = D.min_segment_responses;
 document.getElementById("leg-min2").textContent = D.min_segment_responses;
 document.getElementById("m-note").textContent = LIVE
   ? "Conectado a Supabase. Los datos son los del proyecto; las cifras sólo salen de las funciones api_*, que aplican el umbral en la base."
-  : "Datos de demostración embebidos — 117 personas, 7 equipos, 12 ciclos semanales. Ninguna cifra es real.";
+  : "Datos de demostración embebidos — 117 personas, 7 equipos, 12 ciclos mensuales. Ninguna cifra es real.";
 document.getElementById("matrix-sub").textContent =
-  `Ventana móvil de ${D.window_cycles} ciclos. Agrupar semanas permite bajar a nivel de equipo, pero por eso el umbral exige además ${D.min_segment_responses} personas en el segmento: si no, un equipo de 3 acumularía respuestas suficientes siendo siempre las mismas 3 personas.`;
+  `Ventana móvil de ${D.window_cycles} ciclos. Agrupar meses permite bajar a nivel de equipo, pero por eso el umbral exige además ${D.min_segment_responses} personas en el segmento: si no, un equipo de 3 acumularía respuestas suficientes siendo siempre las mismas 3 personas.`;
 
 const ov = D.overview;
 const sparkClima = D.trend.map(t => t.climate_index);

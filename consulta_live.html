@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resultados de la consulta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --surface-2:#FAFBF9; --line:#E3E6E1; --line-2:#EFF1ED;
+  --ink:#16201D; --ink-2:#55605C; --ink-3:#848E8A;
+  --accent:#00806D; --accent-soft:#E4EFEB; --accent-ink:#FFFFFF; --neg:#B4452F;
+  --shadow:0 1px 2px rgba(22,32,29,.06), 0 10px 30px -18px rgba(22,32,29,.28);
+  --radius:12px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#E0785E;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 34px -20px rgba(0,0,0,.8);
+}}
+:root[data-theme="dark"]{
+  --ground:#111513; --surface:#181D1B; --surface-2:#1E2422; --line:#2C3532; --line-2:#242B29;
+  --ink:#E9EEEB; --ink-2:#A3AEA9; --ink-3:#77827E;
+  --accent:#3FB4A0; --accent-soft:#1D2E2B; --accent-ink:#0C1110; --neg:#E0785E;
+}
+*{box-sizing:border-box}
+body{background:var(--ground); color:var(--ink); margin:0;
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.wrap{max-width:760px; margin:0 auto; padding-inline:20px; padding-block:40px 70px}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-3)}
+.topbar{display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:8px}
+.topbar h1{font-size:19px; margin:2px 0 0; font-weight:600; letter-spacing:-.01em}
+.sub{font-size:13px; color:var(--ink-2); margin:0 0 26px; max-width:62ch}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:22px 24px; margin-bottom:16px}
+.card h2{font-size:16.5px; font-weight:500; letter-spacing:-.01em; margin:0 0 4px; text-wrap:balance}
+.meta{font-size:12px; color:var(--ink-3); margin:0 0 18px}
+
+.row{display:grid; grid-template-columns:1fr; gap:6px; margin-bottom:14px}
+.row .lbl{display:flex; justify-content:space-between; gap:14px; font-size:14px; align-items:baseline}
+.row .lbl b{font-weight:500; color:var(--ink)}
+.row .num{flex:none; font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums}
+.track{height:9px; background:var(--line-2); border-radius:5px; overflow:hidden}
+.fill{height:100%; background:var(--accent); border-radius:5px; width:0;
+  transition:width .5s cubic-bezier(.4,0,.2,1)}
+.fill.top{background:var(--accent)}
+.fill.low{background:var(--line); }
+
+.aviso{font-size:12.5px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:10px 13px; margin-bottom:22px}
+.err{border-left-color:var(--neg); color:var(--neg)}
+input{font:inherit; padding:9px 11px; border:1px solid var(--line); border-radius:8px;
+  background:var(--surface-2); color:var(--ink)}
+button{font:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--ink);
+  background:var(--ink); color:var(--ground); padding:9px 16px; font-size:13.5px}
+.nota{font-size:12.5px; color:var(--ink-3); margin-top:26px}
+footer{margin-top:28px; font-size:12px; color:var(--ink-3); text-align:center}
+footer code{font-family:"IBM Plex Mono",monospace; font-size:11.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Clon Nailted</div>
+      <h1>Resultados de la consulta</h1>
+    </div>
+    <div class="mono" id="total" style="font-size:12px;color:var(--ink-3)"></div>
+  </div>
+  <p class="sub">Las tres preguntas que se lanzaron antes de empezar con los pulsos.
+     Se muestran agregadas; no hay forma de saber quién marcó qué.</p>
+
+  <div id="aviso"></div>
+  <div id="salida"></div>
+
+  <p class="nota" id="nota"></p>
+
+  <footer>Lee <code>api_choice_results()</code>, que aplica el umbral en la base de datos.</footer>
+</div>
+
+<script>
+const CONFIG = {
+  url: "https://tlljvyxcqtrmiutqnjir.supabase.co",
+  key: "sb_publishable_91UlPuAQdhvg9ylW1bME4g_CDhirXlA"
+};
+
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function rpc(fn, args = {}){
+  const token = store.get("pulso_token") || CONFIG.key;
+  const r = await fetch(`${CONFIG.url}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json",
+               apikey: CONFIG.key, Authorization: `Bearer ${token}` },
+    body: JSON.stringify(args)
+  });
+  if (!r.ok) throw new Error(`${fn}: ${r.status} ${(await r.text()).slice(0,140)}`);
+  return r.json();
+}
+
+async function signIn(email, password){
+  const r = await fetch(`${CONFIG.url}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: CONFIG.key },
+    body: JSON.stringify({ email, password })
+  });
+  if (!r.ok) throw new Error("No se ha podido entrar: revisa el email y la contraseña.");
+  store.set("pulso_token", (await r.json()).access_token);
+}
+
+function pintar(filas){
+  const salida = document.getElementById("salida");
+  if (!filas.length) {
+    salida.innerHTML = `<div class="card"><h2>Todavía no hay consulta lanzada</h2>
+      <p class="meta">En cuanto se abra el ciclo de consulta y haya respuestas, aparecerán aquí.</p></div>`;
+    return;
+  }
+  const n = filas[0].total_respuestas;
+  const suprimido = filas[0].suppressed;
+  document.getElementById("total").textContent = n + (n === 1 ? " respuesta" : " respuestas");
+
+  if (suprimido) {
+    salida.innerHTML = `<div class="card"><h2>Aún no se puede mostrar</h2>
+      <p class="meta">Hay ${n} respuestas. Los resultados se muestran a partir del umbral
+      configurado, para que nadie pueda deducir quién contestó qué.</p></div>`;
+    return;
+  }
+
+  // agrupa por pregunta conservando el orden en que vienen
+  const preguntas = [];
+  filas.forEach(f => {
+    let q = preguntas.find(x => x.code === f.question_code);
+    if (!q) { q = { code:f.question_code, body:f.question_body, multi:f.multi, ops:[] }; preguntas.push(q); }
+    q.ops.push(f);
+  });
+
+  salida.innerHTML = preguntas.map(q => {
+    const max = Math.max(...q.ops.map(o => Number(o.porcentaje) || 0), 1);
+    return `<div class="card">
+      <h2>${esc(q.body)}</h2>
+      <p class="meta">${q.multi ? "Se podía marcar más de una: los porcentajes suman más de 100."
+                                : "Una sola respuesta."} Sobre ${n} respuestas.</p>
+      ${q.ops.map(o => {
+        const pct = Number(o.porcentaje) || 0;
+        return `<div class="row">
+          <div class="lbl"><b>${esc(o.option_label)}</b>
+            <span class="num">${pct.toFixed(1).replace(".", ",")}% · ${o.votos}</span></div>
+          <div class="track"><div class="fill ${pct === max ? "top" : ""}"
+               style="width:${Math.round(pct / max * 100)}%"></div></div>
+        </div>`;
+      }).join("")}
+    </div>`;
+  }).join("");
+
+  document.getElementById("nota").textContent =
+    "Las barras están escaladas a la opción más votada de cada pregunta; el número de la derecha es el porcentaje real sobre " + n + " respuestas.";
+}
+
+function pedirAcceso(mensaje){
+  document.getElementById("aviso").innerHTML =
+    `<div class="aviso ${mensaje ? "err" : ""}">${mensaje || "Entra con tu usuario de RRHH para ver los resultados."}</div>`;
+  const box = document.createElement("div");
+  box.className = "card";
+  box.style.cssText = "display:grid;gap:10px;max-width:420px";
+  box.innerHTML = `
+    <div class="eyebrow">Acceso de RRHH</div>
+    <input id="em" type="email" placeholder="email" autocomplete="username">
+    <input id="pw" type="password" placeholder="contraseña" autocomplete="current-password">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button id="go">Entrar</button>
+      <span id="msg" style="font-size:12px;color:var(--neg)"></span>
+    </div>`;
+  document.getElementById("salida").innerHTML = "";
+  document.getElementById("salida").appendChild(box);
+  box.querySelector("#go").addEventListener("click", async () => {
+    const msg = box.querySelector("#msg");
+    msg.textContent = "Entrando…";
+    try {
+      await signIn(box.querySelector("#em").value.trim(), box.querySelector("#pw").value);
+      document.getElementById("aviso").innerHTML = "";
+      arrancar();
+    } catch (e) { msg.textContent = e.message; }
+  });
+}
+
+async function arrancar(){
+  try {
+    pintar(await rpc("api_choice_results"));
+  } catch (err) {
+    // 401/403 = sin sesión o sin permiso de RRHH; lo demás, se enseña tal cual
+    pedirAcceso(/40[13]|Sin sesión|Sólo RRHH/.test(err.message)
+      ? "" : "No se ha podido leer: " + esc(err.message));
+  }
+}
+arrancar();
+</script>
+</body>
+</html>

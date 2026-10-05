@@ -63,6 +63,17 @@ h2{font-size:15px}
 header{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justify-content:space-between; margin-bottom:8px}
 .head-meta{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; color:var(--ink-2)}
 .head-meta b{font-weight:500; color:var(--ink)}
+.link-cuenta{background:none; border:0; padding:0; font:inherit; font-size:13px; color:var(--accent);
+  text-decoration:underline; text-underline-offset:3px; cursor:pointer}
+.link-cuenta:hover{color:var(--accent-strong)}
+.aviso-clave{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0 0 22px; padding:12px 16px;
+  border:1px solid var(--accent); border-left:5px solid var(--accent); border-radius:0 var(--radius) var(--radius) 0;
+  background:var(--accent-soft); color:var(--ink); font-size:13.5px;
+}
+.clave-box{max-width:460px; display:grid; gap:10px; margin-top:22px}
+.clave-box input{font:inherit; padding:9px 11px; border:1px solid var(--line);
+  border-radius:8px; background:var(--surface-2); color:var(--ink)}
 .synthetic{
   display:inline-flex; align-items:center; gap:8px; margin:20px 0 28px; padding:8px 12px;
   border:1px solid var(--line); border-left:3px solid var(--accent);
@@ -230,6 +241,7 @@ footer code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace; 
       <span>Empresa: <b id="m-company"></b></span>
       <span>Último ciclo: <b id="m-cycle" class="mono"></b></span>
       <span>Umbral: <b id="m-min" class="mono"></b></span>
+      <button class="link-cuenta" id="btn-cuenta" hidden>Cambiar contraseña</button>
     </div>
   </header>
 
@@ -2159,7 +2171,114 @@ document.getElementById("c-filters").addEventListener("click", ev => {
   }
   renderAll();
   if (configured && !LIVE) mountSignIn();
+  if (LIVE) revisarCuenta();
 })();
+
+async function revisarCuenta(){
+  mountCuenta();
+  try {
+    const u = await usuarioActual();
+    if (u && !(u.user_metadata && u.user_metadata.pw_cambiada)) avisoClaveProvisional();
+  } catch (err) { console.warn("No se ha podido leer la cuenta:", err.message); }
+}
+
+/* ---------------------------------------------------------------------------
+ *  Cuenta: cambiar la contraseña desde el propio panel
+ *
+ *  Quien da de alta a alguien le pone una provisional, así que hasta que la
+ *  cambie hay una clave que conocen dos personas. El aviso de arriba no se va
+ *  hasta que la cambia, y la marca queda en el propio usuario de Supabase
+ *  (user_metadata.pw_cambiada), no en este navegador.
+ * ------------------------------------------------------------------------- */
+
+async function usuarioActual(){
+  const token = store.get("pulso_token");
+  if (!token) return null;
+  const r = await fetch(`${CONFIG.url}/auth/v1/user`, {
+    headers: { apikey: CONFIG.key, Authorization: `Bearer ${token}` }
+  });
+  if (!r.ok) return null;
+  return r.json();
+}
+
+async function cambiarClave(nueva){
+  const token = store.get("pulso_token");
+  const r = await fetch(`${CONFIG.url}/auth/v1/user`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json",
+               apikey: CONFIG.key, Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ password: nueva, data: { pw_cambiada: true } })
+  });
+  if (!r.ok) {
+    let m = "No se ha podido cambiar";
+    try { const j = await r.json(); m = j.msg || j.error_description || j.message || m; } catch {}
+    throw new Error(m);
+  }
+  return r.json();
+}
+
+function mountCuenta(){
+  const btn = document.getElementById("btn-cuenta");
+  btn.hidden = false;
+  btn.addEventListener("click", () => {
+    if (document.getElementById("clave-box")) {
+      document.getElementById("clave-box").scrollIntoView({behavior:"smooth"});
+      return;
+    }
+    const box = document.createElement("div");
+    box.className = "card clave-box";
+    box.id = "clave-box";
+    box.style.padding = "18px 20px";
+    box.innerHTML = `
+      <div class="eyebrow">Tu contraseña</div>
+      <div style="font-size:12.5px;color:var(--ink-2)">
+        Mínimo 10 caracteres. Al guardarla, la provisional deja de valer.</div>
+      <input id="pw1" type="password" placeholder="nueva contraseña" autocomplete="new-password">
+      <input id="pw2" type="password" placeholder="repítela" autocomplete="new-password">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="chip" id="pw-go"
+          style="background:var(--ink);color:var(--ground);border-color:var(--ink)">Guardar</button>
+        <button class="chip" id="pw-cancel">Cancelar</button>
+        <span id="pw-msg" style="font-size:12px"></span>
+      </div>`;
+    document.querySelector(".wrap").appendChild(box);
+    box.scrollIntoView({behavior:"smooth"});
+    box.querySelector("#pw-cancel").addEventListener("click", () => box.remove());
+    box.querySelector("#pw-go").addEventListener("click", async () => {
+      const msg = box.querySelector("#pw-msg");
+      const a = box.querySelector("#pw1").value, b = box.querySelector("#pw2").value;
+      msg.style.color = "var(--neg)";
+      if (a.length < 10) { msg.textContent = "Demasiado corta: mínimo 10 caracteres."; return; }
+      if (a !== b)       { msg.textContent = "Las dos no coinciden."; return; }
+      msg.style.color = "var(--ink-2)"; msg.textContent = "Guardando…";
+      try {
+        await cambiarClave(a);
+        msg.style.color = "var(--pos)"; msg.textContent = "Hecho: ya es la tuya.";
+        const aviso = document.getElementById("aviso-clave");
+        if (aviso) aviso.remove();
+        setTimeout(() => box.remove(), 1800);
+      } catch (err) { msg.style.color = "var(--neg)"; msg.textContent = err.message; }
+    });
+  });
+}
+
+/* Mientras siga con la provisional, el panel lo recuerda en cada visita */
+function avisoClaveProvisional(){
+  if (document.getElementById("aviso-clave")) return;
+  const el = document.createElement("div");
+  el.className = "aviso-clave";
+  el.id = "aviso-clave";
+  el.innerHTML = `<span>Sigues usando la contraseña provisional que te dieron.
+    Mientras no la cambies, hay otra persona que la conoce.</span>`;
+  const btn = document.createElement("button");
+  btn.className = "chip";
+  btn.style.cssText = "background:var(--accent);color:var(--accent-ink);border-color:var(--accent)";
+  btn.textContent = "Ponerme una";
+  btn.addEventListener("click", () => document.getElementById("btn-cuenta").click());
+  el.appendChild(btn);
+  const ancla = document.getElementById("m-note");
+  ancla.parentNode.insertBefore(el, ancla.nextSibling);
+}
 
 /* Acceso de RRHH: sólo aparece si hay proyecto configurado y aún no hay sesión */
 function mountSignIn(){
@@ -2189,7 +2308,7 @@ function mountSignIn(){
       await signIn(box.querySelector("#si-email").value.trim(),
                    box.querySelector("#si-pass").value);
       D = await loadLive(); LIVE = true;
-      box.remove(); renderAll();
+      box.remove(); renderAll(); revisarCuenta();
     } catch (err) { msg.textContent = err.message; }
   });
 }

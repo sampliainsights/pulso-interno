@@ -69,6 +69,11 @@ header{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justif
   border-radius:0 var(--radius) var(--radius) 0; background:var(--surface-2);
   color:var(--ink-2); font-size:12.5px;
 }
+.synthetic.prueba{
+  display:flex; border-color:var(--neg); border-left-width:5px;
+  background:var(--neg-soft); color:var(--neg); font-size:14px; font-weight:500;
+  padding:14px 18px;
+}
 
 /* ---------- bloques ---------- */
 section{margin-top:36px}
@@ -1812,6 +1817,7 @@ async function loadLive(){
       climate_delta: prev == null ? null : Math.round((ov.climate_index - prev) * 10) / 10,
       enps: ov.enps, enps_delta: ov.enps_delta,
       participation_pct: ov.participation_pct, n_responses: ov.n_responses,
+      es_prueba: !!ov.es_prueba,
       invited: ov.participation_pct ? Math.round(ov.n_responses / ov.participation_pct * 100) : 0,
       open_comments: comments.filter(c => c.status === "new").length
     },
@@ -1857,7 +1863,11 @@ document.getElementById("m-min").textContent =
   `${D.min_segment_responses} respuestas y ${D.min_segment_responses} personas`;
 document.getElementById("leg-min").textContent = D.min_segment_responses;
 document.getElementById("leg-min2").textContent = D.min_segment_responses;
-document.getElementById("m-note").textContent = LIVE
+const notaEl = document.getElementById("m-note");
+notaEl.classList.toggle("prueba", !!D.overview.es_prueba);
+notaEl.textContent = D.overview.es_prueba
+  ? "CICLO DE PRUEBA. Lo que ves en esta pantalla son las respuestas del grupo piloto, no datos reales de la plantilla. Al cerrar el piloto desaparecen y el panel vuelve al último pulso de verdad."
+  : LIVE
   ? "Conectado a Supabase. Los datos son los del proyecto; las cifras sólo salen de las funciones api_*, que aplican el umbral en la base."
   : "Datos de demostración embebidos — 117 personas, 7 equipos, 12 ciclos mensuales. Ninguna cifra es real.";
 document.getElementById("matrix-sub").textContent =

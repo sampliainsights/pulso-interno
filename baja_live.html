@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Baja de las encuestas · Pulso interno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F7F6; --card:#FFFFFF; --ink:#16201E; --muted:#56635F; --line:#D9DFDD;
+    --accent:#00806D; --accent-ink:#FFFFFF; --warn:#BE4526;
+    --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#121615; --card:#1B2220; --ink:#E8EEEC; --muted:#9FB0AB; --line:#2E3936;
+      --accent:#3FB4A0; --accent-ink:#0B1412; --warn:#D5714D;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121615; --card:#1B2220; --ink:#E8EEEC; --muted:#9FB0AB; --line:#2E3936;
+    --accent:#3FB4A0; --accent-ink:#0B1412; --warn:#D5714D;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-family:var(--font);
+    font-size:17px; line-height:1.55;
+    display:flex; align-items:center; justify-content:center;
+    padding:max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  }
+  main{
+    width:100%; max-width:30rem; background:var(--card);
+    border:1px solid var(--line); border-radius:10px; padding:32px 28px 28px;
+  }
+  h1{font-size:1.4rem; line-height:1.25; font-weight:600; margin:0 0 14px}
+  p{margin:0 0 14px; max-width:60ch}
+  .muted{color:var(--muted); font-size:.94rem}
+  .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px}
+  button{
+    font:inherit; font-weight:500; cursor:pointer; border-radius:8px;
+    padding:12px 20px; min-height:46px; border:1px solid var(--accent);
+    background:var(--accent); color:var(--accent-ink);
+  }
+  button.quiet{background:transparent; color:var(--ink); border-color:var(--line)}
+  button:disabled{opacity:.6; cursor:default}
+  button:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+  .error{color:var(--warn)}
+  .done{border-left:3px solid var(--accent); padding-left:14px; margin:0 0 16px}
+  .skel{height:1.1em; width:70%; background:var(--line); border-radius:4px; margin:0 0 12px}
+  @media (prefers-reduced-motion:no-preference){
+    .skel{animation:pulse 1.2s ease-in-out infinite}
+    @keyframes pulse{50%{opacity:.5}}
+  }
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite">
+  <div class="skel"></div><div class="skel" style="width:50%"></div>
+</main>
+
+<script>
+/* Copia aquí la misma URL y la misma clave PUBLISHABLE que ya llevan survey_live.html
+   y dashboard_live.html. Nunca la service_role. */
+const SUPABASE_URL = 'https://tlljvyxcqtrmiutqnjir.supabase.co';
+const SUPABASE_KEY = 'PEGA_AQUI_LA_CLAVE_PUBLISHABLE';
+
+const app   = document.getElementById('app');
+const token = new URLSearchParams(location.search).get('b');
+
+async function rpc(fn){
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', apikey:SUPABASE_KEY, Authorization:`Bearer ${SUPABASE_KEY}`},
+    body: JSON.stringify({p_token: token})
+  });
+  if(!r.ok) throw new Error(String(r.status));
+  return r.json();           // devuelve un texto: 'activo' | 'baja' | 'invalido'
+}
+
+function view(html){ app.innerHTML = html; const h = app.querySelector('h1'); if(h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }
+
+function render(estado){
+  if(estado === 'activo'){
+    view(`
+      <h1>¿Quieres dejar de recibir las encuestas del pulso?</h1>
+      <p>Si te das de baja, dejaremos de escribirte a esta dirección.</p>
+      <p class="muted">Lo que hayas contestado antes no cambia: las respuestas son anónimas y no se pueden asociar contigo.</p>
+      <div class="row"><button id="baja">Darme de baja</button></div>`);
+    document.getElementById('baja').onclick = () => cambiar('baja_confirmar', 'baja');
+  } else if(estado === 'baja'){
+    view(`
+      <h1>Ya no te escribiremos</h1>
+      <p class="done">Tu baja está registrada. No recibirás más encuestas del pulso.</p>
+      <p class="muted">Si ha sido un error o cambias de idea, puedes volver a recibirlas.</p>
+      <div class="row"><button class="quiet" id="volver">Volver a recibir las encuestas</button></div>`);
+    document.getElementById('volver').onclick = () => cambiar('baja_revertir', 'activo');
+  } else {
+    view(`
+      <h1>Este enlace no es válido</h1>
+      <p>Puede que se haya cortado al copiarlo. Abre el correo y pulsa el enlace de baja completo.</p>
+      <p class="muted">Si el problema sigue, escribe a People y te damos de baja a mano.</p>`);
+  }
+}
+
+async function cambiar(fn, esperado){
+  const b = app.querySelector('button'); if(b){ b.disabled = true; }
+  try { render(await rpc(fn)); }
+  catch(e){ fallo(() => cambiar(fn, esperado)); }
+}
+
+function fallo(reintentar){
+  view(`
+    <h1>No hemos podido conectar</h1>
+    <p class="error">Tu cambio no se ha guardado.</p>
+    <div class="row"><button id="reintentar">Reintentar</button></div>`);
+  document.getElementById('reintentar').onclick = reintentar;
+}
+
+async function iniciar(){
+  if(!token){ render('invalido'); return; }
+  try { render(await rpc('baja_estado')); }     // sólo consulta: abrir el enlace nunca da de baja
+  catch(e){ fallo(iniciar); }
+}
+iniciar();
+</script>
+</body>
+</html>
